@@ -39,6 +39,7 @@ public:
     QHBoxLayout *layout7;
     QHBoxLayout *layout8;
     QTextBrowser *debug;
+    QTextBrowser *analyseDebug;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -47,7 +48,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(600, 600);
+        MainWindow->resize(657, 667);
         QPalette palette;
         QBrush brush(QColor(255, 255, 255, 255));
         brush.setStyle(Qt::SolidPattern);
@@ -69,7 +70,7 @@ public:
         centralWidget->setLayoutDirection(Qt::LeftToRight);
         gridLayoutWidget = new QWidget(centralWidget);
         gridLayoutWidget->setObjectName(QStringLiteral("gridLayoutWidget"));
-        gridLayoutWidget->setGeometry(QRect(180, 90, 401, 401));
+        gridLayoutWidget->setGeometry(QRect(310, 240, 271, 251));
         checkerBoard = new QGridLayout(gridLayoutWidget);
         checkerBoard->setSpacing(0);
         checkerBoard->setContentsMargins(11, 11, 11, 11);
@@ -132,10 +133,13 @@ public:
         debug = new QTextBrowser(centralWidget);
         debug->setObjectName(QStringLiteral("debug"));
         debug->setGeometry(QRect(10, 200, 151, 261));
+        analyseDebug = new QTextBrowser(centralWidget);
+        analyseDebug->setObjectName(QStringLiteral("analyseDebug"));
+        analyseDebug->setGeometry(QRect(20, 0, 491, 191));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 600, 21));
+        menuBar->setGeometry(QRect(0, 0, 657, 21));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));

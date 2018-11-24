@@ -1,12 +1,15 @@
 #ifndef FIELD_H
 #define FIELD_H
 
+
 #include <QMainWindow>
 #include <QObject>
 #include <QWidget>
 #include <QPushButton>
 #include <QLabel>
+#include <QVector>
 #include "mainwindow.h"
+
 
 
 class ClickableLabel : public QLabel
@@ -17,6 +20,9 @@ public:
     ~ClickableLabel();
     int index;
     void indexChange(int);
+
+
+    //friend void isClicked(int);
 signals:
     void clicked(int);
 protected:
@@ -32,11 +38,18 @@ public:
     bool king;
     bool empty;
     bool needToBeat;
-    int *neighbors;
-    int *beat;
+    QVector<int> neighbors;
     int color;
     int coord;
     ClickableLabel *checkerbutton;
+    //friend class MainWindow;
+    //void mousePressEvent(QMouseEvent* event);
+
+
+    //friend void isClicked(int);
+
+/*signals:
+    void clicked(int);*/
 };
 
 

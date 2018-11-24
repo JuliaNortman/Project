@@ -15,7 +15,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-protected:
+//protected:
     Ui::MainWindow *ui;
 };
 
