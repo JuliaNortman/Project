@@ -21,8 +21,6 @@ public:
     int index;
     void indexChange(int);
 
-
-    //friend void isClicked(int);
 signals:
     void clicked(int);
 protected:
@@ -41,15 +39,8 @@ public:
     QVector<int> neighbors;
     int color;
     int coord;
+    bool beat;
     ClickableLabel *checkerbutton;
-    //friend class MainWindow;
-    //void mousePressEvent(QMouseEvent* event);
-
-
-    //friend void isClicked(int);
-
-/*signals:
-    void clicked(int);*/
 };
 
 

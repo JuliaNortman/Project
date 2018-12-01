@@ -18,8 +18,8 @@ public:
     void setPicture(int, QString);
     bool isBlackField(int);
     bool isNeighbor(int, int);
-    void markField(int); //выделить белую фигуру и её соседей
-    void deleteMark(int); //убрать выделение с белой фигуры и её соседей
+    void markField(int); //???????? ????? ?????? ? ?? ???????
+    void deleteMark(int); //?????? ????????? ? ????? ?????? ? ?? ???????
     void analyseField();
     bool needToBeatThisField(int, int);
     bool canMove(int, int);
@@ -38,8 +38,7 @@ protected:
     bool blackBeat; //checks whether is needed to beat black figure
     QVector<int> whiteMove; //all white possible moves
     QVector<int> blackMove;
-    /*int *mustBeatWhite;
-    int *mustBeatBlack;*/
+
 public slots:
     void isClicked(int i);
 };

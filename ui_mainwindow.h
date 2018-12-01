@@ -13,6 +13,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
@@ -40,6 +41,8 @@ public:
     QHBoxLayout *layout8;
     QTextBrowser *debug;
     QTextBrowser *analyseDebug;
+    QLabel *whiteNumber;
+    QLabel *blackNuber;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -48,12 +51,12 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(657, 667);
+        MainWindow->resize(650, 650);
         QPalette palette;
         QBrush brush(QColor(255, 255, 255, 255));
         brush.setStyle(Qt::SolidPattern);
         palette.setBrush(QPalette::Active, QPalette::Base, brush);
-        QBrush brush1(QColor(0, 255, 255, 255));
+        QBrush brush1(QColor(255, 255, 197, 255));
         brush1.setStyle(Qt::SolidPattern);
         palette.setBrush(QPalette::Active, QPalette::Window, brush1);
         palette.setBrush(QPalette::Inactive, QPalette::Base, brush);
@@ -70,7 +73,7 @@ public:
         centralWidget->setLayoutDirection(Qt::LeftToRight);
         gridLayoutWidget = new QWidget(centralWidget);
         gridLayoutWidget->setObjectName(QStringLiteral("gridLayoutWidget"));
-        gridLayoutWidget->setGeometry(QRect(310, 240, 271, 251));
+        gridLayoutWidget->setGeometry(QRect(170, 180, 351, 351));
         checkerBoard = new QGridLayout(gridLayoutWidget);
         checkerBoard->setSpacing(0);
         checkerBoard->setContentsMargins(11, 11, 11, 11);
@@ -132,14 +135,20 @@ public:
 
         debug = new QTextBrowser(centralWidget);
         debug->setObjectName(QStringLiteral("debug"));
-        debug->setGeometry(QRect(10, 200, 151, 261));
+        debug->setGeometry(QRect(10, 200, 71, 341));
         analyseDebug = new QTextBrowser(centralWidget);
         analyseDebug->setObjectName(QStringLiteral("analyseDebug"));
-        analyseDebug->setGeometry(QRect(20, 0, 491, 191));
+        analyseDebug->setGeometry(QRect(540, 120, 91, 121));
+        whiteNumber = new QLabel(centralWidget);
+        whiteNumber->setObjectName(QStringLiteral("whiteNumber"));
+        whiteNumber->setGeometry(QRect(40, 20, 81, 41));
+        blackNuber = new QLabel(centralWidget);
+        blackNuber->setObjectName(QStringLiteral("blackNuber"));
+        blackNuber->setGeometry(QRect(530, 20, 81, 41));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 657, 21));
+        menuBar->setGeometry(QRect(0, 0, 650, 21));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -156,6 +165,8 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", nullptr));
+        whiteNumber->setText(QApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">White: 12</span></p></body></html>", nullptr));
+        blackNuber->setText(QApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Black: 12</span></p></body></html>", nullptr));
     } // retranslateUi
 
 };

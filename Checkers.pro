@@ -26,15 +26,18 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     field.cpp \
-    board.cpp
+    board.cpp \
+    start.cpp
 
 HEADERS += \
         mainwindow.h \
     field.h \
-    board.h
+    board.h \
+    start.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    start.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

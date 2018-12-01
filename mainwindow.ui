@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>657</width>
-    <height>667</height>
+    <width>650</width>
+    <height>650</height>
    </rect>
   </property>
   <property name="palette">
@@ -25,9 +25,9 @@
      <colorrole role="Window">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>0</red>
+        <red>255</red>
         <green>255</green>
-        <blue>255</blue>
+        <blue>197</blue>
        </color>
       </brush>
      </colorrole>
@@ -45,9 +45,9 @@
      <colorrole role="Window">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>0</red>
+        <red>255</red>
         <green>255</green>
-        <blue>255</blue>
+        <blue>197</blue>
        </color>
       </brush>
      </colorrole>
@@ -56,18 +56,18 @@
      <colorrole role="Base">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>0</red>
+        <red>255</red>
         <green>255</green>
-        <blue>255</blue>
+        <blue>197</blue>
        </color>
       </brush>
      </colorrole>
      <colorrole role="Window">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>0</red>
+        <red>255</red>
         <green>255</green>
-        <blue>255</blue>
+        <blue>197</blue>
        </color>
       </brush>
      </colorrole>
@@ -90,10 +90,10 @@
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>240</y>
-      <width>271</width>
-      <height>251</height>
+      <x>170</x>
+      <y>180</y>
+      <width>351</width>
+      <height>351</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="checkerBoard">
@@ -170,19 +170,45 @@
      <rect>
       <x>10</x>
       <y>200</y>
-      <width>151</width>
-      <height>261</height>
+      <width>71</width>
+      <height>341</height>
      </rect>
     </property>
    </widget>
    <widget class="QTextBrowser" name="analyseDebug">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>0</y>
-      <width>491</width>
-      <height>191</height>
+      <x>540</x>
+      <y>120</y>
+      <width>91</width>
+      <height>121</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="whiteNumber">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>20</y>
+      <width>81</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;White: 12&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="blackNuber">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>20</y>
+      <width>81</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Black: 12&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
   </widget>
@@ -191,7 +217,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>657</width>
+     <width>650</width>
      <height>21</height>
     </rect>
    </property>
