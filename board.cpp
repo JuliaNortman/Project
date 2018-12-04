@@ -6,6 +6,7 @@
 #include <QMovie>
 #include <QDebug>
 #include <QMessageBox>
+#include <QAbstractButton>
 
 Board::Board()
 {
@@ -59,8 +60,6 @@ Board::Board()
         }
         connect(fields[i].checkerbutton, SIGNAL(clicked(int)), this, SLOT(isClicked(int)));
     }
-   // ui->imageResult->hide();
-   // ui->close->hide();
 }
 
 //check if field is black
@@ -133,7 +132,6 @@ void Board::modelBoard(int i)
 
 void Board::isClicked(int i)
 {
-    ui->debug->insertPlainText(QString::number(i) + '\n');
     prevActive = active;
     active = i;
 
@@ -174,11 +172,7 @@ void Board::isClicked(int i)
                     }
                     move(prevActive, i);
                     analyseField();
-
-                    ui->analyseDebug->append("MustWhiteBeat: " + QString::number(whiteBeat));
-                    ui->analyseDebug->append("MustBlackBeat: " + QString::number(blackBeat));
-
-                    if(black>0 && (!fields[i].beat || !fields[i].needToBeat))
+                    if(black > 0 && (!fields[i].beat || !fields[i].needToBeat) && prevActive != -1)
                     {
                         //black move
                         srand(QDateTime::currentMSecsSinceEpoch());
@@ -188,14 +182,17 @@ void Board::isClicked(int i)
                         int to = 0;
                         if(fields[from].neighbors.size()-1 == 0) to = 0;
                         else to = 0 + rand()%(fields[from].neighbors.size()-1);
-                        qDebug() << "From: " + QString::number(from);
                         if(blackBeat && fields[blackMove[from]].needToBeat)
                         {
-                            qDebug() << "Beat black: " + QString::number(from);
                             int fromField = blackMove[from];
                             int toField = fields[blackMove[from]].neighbors[to];
                             while(fields[fromField].needToBeat)
                             {
+                                QTime time;
+                                time.start();
+                                for(;time.elapsed() < 500;) {
+                                    qApp->processEvents(nullptr);
+                                }
                                 move(fromField, toField);
                                 analyseField();
                                 fromField = toField;
@@ -204,30 +201,21 @@ void Board::isClicked(int i)
                         }
                         else
                         {
+                            QTime time;
+                            time.start();
+                            for(;time.elapsed() < 500;) {
+                                qApp->processEvents(nullptr);
+                            }
                             move(blackMove[from], fields[blackMove[from]].neighbors[to]);
                             analyseField();
                         }
-
-                        for(int k = 0; k < blackMove.size(); ++k)
-                        {
-                            ui->analyseDebug->append("BlackMove: " + QString::number(blackMove[k]));
-                        }
-                        for(int k = 0; k < whiteMove.size(); ++k)
-                        {
-                            ui->analyseDebug->append("WhiteMove: " + QString::number(whiteMove[k]));
-                        }
-
-                        ui->analyseDebug->append("MustWhiteBeat: " + QString::number(whiteBeat));
-                        ui->analyseDebug->append("MustBlackBeat: " + QString::number(blackBeat));
-
-
                     }
                 }
                 else
                 {
                     deleteMark(prevActive);
                 }
-                fields[i].beat =  false;
+                for(int p = 0; p < 64; ++p) fields[p].beat = false;
             }
         }
 }
@@ -445,17 +433,69 @@ void Board::analyseField()
         }
 
     }
-    if(white == 0)
+    if(white == 0 || whiteMove.empty())
     {
         QMessageBox *lost = new QMessageBox;
         lost->setText("Ooops, you have lost...\n");
-        lost->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-        lost->Ok
-        ui->debug->append("You have lost:(");
+        QAbstractButton *restart = lost->addButton(tr("Restart"), QMessageBox::YesRole);
+        QAbstractButton *quit = lost->addButton(tr("Quit"), QMessageBox::NoRole);
+        lost->exec();
+        if(lost->clickedButton() == restart)
+        {
+            white = black = 12;
+            active = prevActive = -1;
+            whiteBeat = blackBeat = false;
+            whiteMove.clear();
+            blackMove.clear();
+            for(int i = 0; i < 64; ++i)
+            {
+                fields[i].beat = false;
+                fields[i].color = 0;
+                fields[i].empty = true;
+                fields[i].king = false;
+                fields[i].needToBeat = false;
+                fields[i].neighbors.clear();
+                modelBoard(i);
+                lost->close();
+            }
+        }
+        else if(lost->clickedButton() == quit)
+        {
+            lost->close();
+            this->close();
+        }
     }
-    if(black == 0)
+    if(black == 0 || blackMove.empty())
     {
-        ui->debug->append("You have won!");
+        QMessageBox *lost = new QMessageBox;
+        lost->setText("Congratulation!!! You have won!\n");
+        QAbstractButton *restart = lost->addButton(tr("Restart"), QMessageBox::YesRole);
+        QAbstractButton *quit = lost->addButton(tr("Quit"), QMessageBox::NoRole);
+        lost->exec();
+        if(lost->clickedButton() == restart)
+        {
+            white = black = 12;
+            active = prevActive = -1;
+            whiteBeat = blackBeat = false;
+            whiteMove.clear();
+            blackMove.clear();
+            for(int i = 0; i < 64; ++i)
+            {
+                fields[i].beat = false;
+                fields[i].color = 0;
+                fields[i].empty = true;
+                fields[i].king = false;
+                fields[i].needToBeat = false;
+                fields[i].neighbors.clear();
+                modelBoard(i);
+                lost->close();
+            }
+        }
+        else if(lost->clickedButton() == quit)
+        {
+            lost->close();
+            this->close();
+        }
     }
 }
 
@@ -588,19 +628,15 @@ bool Board::canMove(int i, int j)
 {
     if(j < 0 || j > 64 || !isBlackField(j))
     {
-       // ui->analyseDebug->insertPlainText("1");
         return false;
     }
     if(!fields[j].empty)
     {
-       // ui->analyseDebug->insertPlainText("2");
         return false;
     }
-     //ui->analyseDebug->insertPlainText("3");
     return  true;
 }
 
 Board::~Board()
 {
-   // delete [] fields;
 }

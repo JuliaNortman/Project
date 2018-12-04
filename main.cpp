@@ -15,8 +15,6 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
-  /*  Board *b = new Board;
-    b->show();*/
     start *game = new start;
     game->show();
 

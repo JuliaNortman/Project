@@ -17,7 +17,6 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -39,8 +38,6 @@ public:
     QHBoxLayout *layout6;
     QHBoxLayout *layout7;
     QHBoxLayout *layout8;
-    QTextBrowser *debug;
-    QTextBrowser *analyseDebug;
     QLabel *whiteNumber;
     QLabel *blackNuber;
     QMenuBar *menuBar;
@@ -133,12 +130,6 @@ public:
 
         checkerBoard->addLayout(verticalLayout, 0, 0, 1, 1);
 
-        debug = new QTextBrowser(centralWidget);
-        debug->setObjectName(QStringLiteral("debug"));
-        debug->setGeometry(QRect(10, 200, 71, 341));
-        analyseDebug = new QTextBrowser(centralWidget);
-        analyseDebug->setObjectName(QStringLiteral("analyseDebug"));
-        analyseDebug->setGeometry(QRect(540, 120, 91, 121));
         whiteNumber = new QLabel(centralWidget);
         whiteNumber->setObjectName(QStringLiteral("whiteNumber"));
         whiteNumber->setGeometry(QRect(40, 20, 81, 41));

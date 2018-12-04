@@ -165,26 +165,6 @@
      </item>
     </layout>
    </widget>
-   <widget class="QTextBrowser" name="debug">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>200</y>
-      <width>71</width>
-      <height>341</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="analyseDebug">
-    <property name="geometry">
-     <rect>
-      <x>540</x>
-      <y>120</y>
-      <width>91</width>
-      <height>121</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="whiteNumber">
     <property name="geometry">
      <rect>

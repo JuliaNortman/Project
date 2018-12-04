@@ -39,6 +39,4 @@ field::field()
 
 field::~field()
 {
-   // delete [] neighbors;
-   // delete [] beat;
 }
