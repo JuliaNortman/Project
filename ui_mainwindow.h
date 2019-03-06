@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.11.2
+** Created by: Qt User Interface Compiler version 5.12.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -47,7 +47,7 @@ public:
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
-            MainWindow->setObjectName(QStringLiteral("MainWindow"));
+            MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->resize(650, 650);
         QPalette palette;
         QBrush brush(QColor(255, 255, 255, 255));
@@ -62,68 +62,68 @@ public:
         palette.setBrush(QPalette::Disabled, QPalette::Window, brush1);
         MainWindow->setPalette(palette);
         QFont font;
-        font.setFamily(QStringLiteral("Arial"));
+        font.setFamily(QString::fromUtf8("Arial"));
         font.setPointSize(10);
         MainWindow->setFont(font);
         centralWidget = new QWidget(MainWindow);
-        centralWidget->setObjectName(QStringLiteral("centralWidget"));
+        centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         centralWidget->setLayoutDirection(Qt::LeftToRight);
         gridLayoutWidget = new QWidget(centralWidget);
-        gridLayoutWidget->setObjectName(QStringLiteral("gridLayoutWidget"));
+        gridLayoutWidget->setObjectName(QString::fromUtf8("gridLayoutWidget"));
         gridLayoutWidget->setGeometry(QRect(170, 180, 351, 351));
         checkerBoard = new QGridLayout(gridLayoutWidget);
         checkerBoard->setSpacing(0);
         checkerBoard->setContentsMargins(11, 11, 11, 11);
-        checkerBoard->setObjectName(QStringLiteral("checkerBoard"));
+        checkerBoard->setObjectName(QString::fromUtf8("checkerBoard"));
         checkerBoard->setContentsMargins(0, 0, 0, 0);
         verticalLayout = new QVBoxLayout();
         verticalLayout->setSpacing(0);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         layout1 = new QHBoxLayout();
         layout1->setSpacing(0);
-        layout1->setObjectName(QStringLiteral("layout1"));
+        layout1->setObjectName(QString::fromUtf8("layout1"));
 
         verticalLayout->addLayout(layout1);
 
         layout2 = new QHBoxLayout();
         layout2->setSpacing(0);
-        layout2->setObjectName(QStringLiteral("layout2"));
+        layout2->setObjectName(QString::fromUtf8("layout2"));
 
         verticalLayout->addLayout(layout2);
 
         layout3 = new QHBoxLayout();
         layout3->setSpacing(0);
-        layout3->setObjectName(QStringLiteral("layout3"));
+        layout3->setObjectName(QString::fromUtf8("layout3"));
 
         verticalLayout->addLayout(layout3);
 
         layout4 = new QHBoxLayout();
         layout4->setSpacing(0);
-        layout4->setObjectName(QStringLiteral("layout4"));
+        layout4->setObjectName(QString::fromUtf8("layout4"));
 
         verticalLayout->addLayout(layout4);
 
         layout5 = new QHBoxLayout();
         layout5->setSpacing(0);
-        layout5->setObjectName(QStringLiteral("layout5"));
+        layout5->setObjectName(QString::fromUtf8("layout5"));
 
         verticalLayout->addLayout(layout5);
 
         layout6 = new QHBoxLayout();
         layout6->setSpacing(0);
-        layout6->setObjectName(QStringLiteral("layout6"));
+        layout6->setObjectName(QString::fromUtf8("layout6"));
 
         verticalLayout->addLayout(layout6);
 
         layout7 = new QHBoxLayout();
         layout7->setSpacing(0);
-        layout7->setObjectName(QStringLiteral("layout7"));
+        layout7->setObjectName(QString::fromUtf8("layout7"));
 
         verticalLayout->addLayout(layout7);
 
         layout8 = new QHBoxLayout();
         layout8->setSpacing(0);
-        layout8->setObjectName(QStringLiteral("layout8"));
+        layout8->setObjectName(QString::fromUtf8("layout8"));
 
         verticalLayout->addLayout(layout8);
 
@@ -131,21 +131,21 @@ public:
         checkerBoard->addLayout(verticalLayout, 0, 0, 1, 1);
 
         whiteNumber = new QLabel(centralWidget);
-        whiteNumber->setObjectName(QStringLiteral("whiteNumber"));
+        whiteNumber->setObjectName(QString::fromUtf8("whiteNumber"));
         whiteNumber->setGeometry(QRect(40, 20, 81, 41));
         blackNuber = new QLabel(centralWidget);
-        blackNuber->setObjectName(QStringLiteral("blackNuber"));
+        blackNuber->setObjectName(QString::fromUtf8("blackNuber"));
         blackNuber->setGeometry(QRect(530, 20, 81, 41));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
-        menuBar->setObjectName(QStringLiteral("menuBar"));
+        menuBar->setObjectName(QString::fromUtf8("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 650, 21));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
-        mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
+        mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
         MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(MainWindow);
-        statusBar->setObjectName(QStringLiteral("statusBar"));
+        statusBar->setObjectName(QString::fromUtf8("statusBar"));
         MainWindow->setStatusBar(statusBar);
 
         retranslateUi(MainWindow);

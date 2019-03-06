@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'start.ui'
 **
-** Created by: Qt User Interface Compiler version 5.11.2
+** Created by: Qt User Interface Compiler version 5.12.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -28,7 +28,7 @@ public:
     void setupUi(QDialog *start)
     {
         if (start->objectName().isEmpty())
-            start->setObjectName(QStringLiteral("start"));
+            start->setObjectName(QString::fromUtf8("start"));
         start->resize(650, 650);
         QPalette palette;
         QBrush brush(QColor(255, 255, 255, 255));
@@ -43,17 +43,17 @@ public:
         palette.setBrush(QPalette::Disabled, QPalette::Window, brush1);
         start->setPalette(palette);
         QFont font;
-        font.setFamily(QStringLiteral("Arial"));
+        font.setFamily(QString::fromUtf8("Arial"));
         font.setPointSize(10);
         start->setFont(font);
         verticalLayoutWidget = new QWidget(start);
-        verticalLayoutWidget->setObjectName(QStringLiteral("verticalLayoutWidget"));
+        verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
         verticalLayoutWidget->setGeometry(QRect(230, 80, 151, 51));
         startLable = new QVBoxLayout(verticalLayoutWidget);
-        startLable->setObjectName(QStringLiteral("startLable"));
+        startLable->setObjectName(QString::fromUtf8("startLable"));
         startLable->setContentsMargins(0, 0, 0, 0);
         rules = new QTextBrowser(start);
-        rules->setObjectName(QStringLiteral("rules"));
+        rules->setObjectName(QString::fromUtf8("rules"));
         rules->setGeometry(QRect(150, 160, 341, 361));
 
         retranslateUi(start);

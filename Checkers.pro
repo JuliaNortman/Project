@@ -1,10 +1,12 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2018-11-09T19:18:53
+# Project created by QtCreator 2019-03-05T13:27:54
 #
 #-------------------------------------------------
 
-QT       += core gui widgets
+QT       += core gui
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Checkers
 TEMPLATE = app
@@ -25,18 +27,18 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    field.cpp \
     board.cpp \
+    field.cpp \
     start.cpp
 
 HEADERS += \
         mainwindow.h \
-    field.h \
     board.h \
+    field.h \
     start.h
 
 FORMS += \
-        mainwindow.ui \
+    mainwindow.ui \
     start.ui
 
 # Default rules for deployment.
