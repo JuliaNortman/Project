@@ -90,10 +90,10 @@
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>180</y>
-      <width>351</width>
-      <height>351</height>
+      <x>10</x>
+      <y>320</y>
+      <width>221</width>
+      <height>221</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="checkerBoard">
@@ -190,6 +190,17 @@
     <property name="text">
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Black: 12&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>140</y>
+      <width>171</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="grid"/>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

@@ -29,13 +29,16 @@ SOURCES += \
         mainwindow.cpp \
     board.cpp \
     field.cpp \
-    start.cpp
+    start.cpp \
+    figure.cpp
 
 HEADERS += \
         mainwindow.h \
     board.h \
     field.h \
-    start.h
+    start.h \
+    constants.h \
+    figure.h
 
 FORMS += \
     mainwindow.ui \

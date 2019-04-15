@@ -7,14 +7,39 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QAbstractButton>
+#include <QHBoxLayout>
+#include "constants.h"
 
-Board::Board()
+Board::Board(Color pl)
+    :player(pl)
 {
-    fields = new field[64];
+    fields = new field[SIZE];
     whiteBeat = blackBeat = false;
     active = prevActive = -1;
     white = black = 12;
-    for(int i = 0; i < 64; ++i)
+
+    if(player == Color::WHITE)
+    {
+        QHBoxLayout *layout;
+        for(int i = 0; i < SIZE; ++i)
+        {
+            if(i%8 == 0)
+            {
+               layout  = new QHBoxLayout;
+            }
+            fields[i].setCoordinate(i);
+            fields[i].checkerbutton->indexChange(i);
+            layout->addWidget(fields[i]);
+        }
+
+        for(int i = SIZE-1; i >= 0; --i)
+        {
+
+        }
+    }
+
+
+    /*for(int i = 0; i < 64; ++i)
     {
         fields[i].coord = i;
         fields[i].checkerbutton->indexChange(i);
@@ -59,7 +84,7 @@ Board::Board()
             modelBoard(i);
         }
         connect(fields[i].checkerbutton, SIGNAL(clicked(int)), this, SLOT(isClicked(int)));
-    }
+    }*/
 }
 
 //check if field is black
@@ -73,7 +98,7 @@ bool Board::isBlackField(int i)
 void Board::setPicture(int i, QString path)
 {
     QPixmap checkerbuttonPix(path);
-    fields[i].checkerbutton->setPixmap(checkerbuttonPix);
+    fields[i].setPixmap(checkerbuttonPix);
     fields[i].checkerbutton->setScaledContents(true);
 }
 

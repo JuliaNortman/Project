@@ -7,12 +7,13 @@
 #include <QWidget>
 #include <QVector>
 #include "field.h"
+#include "constants.h"
 
 class Board :public field
 {
     Q_OBJECT
 public:
-    Board();
+    Board(Color pl);
     ~Board();
     void modelBoard(int);
     void setPicture(int, QString);
@@ -37,7 +38,10 @@ protected:
     bool whiteBeat; //checks whether is needed to beat white figure
     bool blackBeat; //checks whether is needed to beat black figure
     QVector<int> whiteMove; //all white possible moves
-    QVector<int> blackMove;
+    QVector<int> blackMove; //all black possible moves
+    QVector<int> whiteBeats; //all fields (white figures) that need to beat
+    QVector<int> blackBeats; //all fields (black figures) that need to beat
+    Color player; //what color of figures player plays
 
 public slots:
     void isClicked(int i);
