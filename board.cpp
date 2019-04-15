@@ -18,9 +18,10 @@ Board::Board(Color pl)
     active = prevActive = -1;
     white = black = 12;
 
+
     if(player == Color::WHITE)
     {
-        QHBoxLayout *layout;
+        QHBoxLayout *layout = nullptr;
         for(int i = 0; i < SIZE; ++i)
         {
             if(i%8 == 0)
@@ -28,24 +29,44 @@ Board::Board(Color pl)
                layout  = new QHBoxLayout;
             }
             fields[i].setCoordinate(i);
-            fields[i].checkerbutton->indexChange(i);
-            layout->addWidget(fields[i]);
-        }
-
-        for(int i = SIZE-1; i >= 0; --i)
-        {
-
+            fields[i].getCheckerbutton()->indexChange(i);
+            layout->addWidget(fields[i].getCheckerbutton());
+            if((i+1)%8 == 0)
+            {
+                ui->gridChBoard->addLayout(layout, i/8, 0);
+            }
+            modelBoard(i);
         }
     }
+    else
+    {
+        QHBoxLayout *layout = nullptr;
+        for(int i = SIZE-1; i >= 0; --i)
+        {
+            if((i+1)%8 == 0)
+            {
+               layout  = new QHBoxLayout;
+            }
+            fields[i].setCoordinate(i);
+            fields[i].getCheckerbutton()->indexChange(i);
+            layout->addWidget(fields[i].getCheckerbutton());
+            if(i%8 == 0)
+            {
+                ui->gridChBoard->addLayout(layout, (SIZE-i-1)/8, 0);
+            }
+            modelBoard(i);
+        }
+    }
+    analyseField();
 
 
     /*for(int i = 0; i < 64; ++i)
     {
-        fields[i].coord = i;
-        fields[i].checkerbutton->indexChange(i);
+      //  fields[i].coordinate = i;
+        fields[i].getCheckerbutton()->indexChange(i);
         if(i < 8)
         {
-            ui->layout1->addWidget(fields[i].checkerbutton);
+            ui->layout1->addWidget(fields[i].getCheckerbutton());
             modelBoard(i);
         }
         else if(i < 16)
@@ -95,76 +116,124 @@ bool Board::isBlackField(int i)
 }
 
 //function sets right picture
-void Board::setPicture(int i, QString path)
+/*void Board::setPicture(int i, QString path)
 {
     QPixmap checkerbuttonPix(path);
-    fields[i].setPixmap(checkerbuttonPix);
-    fields[i].checkerbutton->setScaledContents(true);
-}
+    fields[i].getCheckerbutton()->setPixmap(checkerbuttonPix);
+    fields[i].getCheckerbutton()->setScaledContents(true);
+}*/
 
+
+//models board before the beginning of the game
 void Board::modelBoard(int i)
 {
-     if((i%2 + i/8)%2 == 0)
+     if(!isBlackField(i)) // field is white
      {
-         setPicture(i, "Images/whiteField.png");
+         fields[i].setPicture();
      }
      else
      {
-         if(i/8 < 3)
+         fields[i].setColor((Color::BLACK)); //field is black
+         if(i <= 23)
          {
-             setPicture(i, "Images/redSimpleFigure.png");
-             fields[i].empty = false;
-             fields[i].color = 2;
+             //black figures
+             Figure* figure = new Figure(Color::BLACK);
+             fields[i].setFigure(figure);
+             fields[i].setPicture();
+         }
+         else if(i >= 40)
+         {
+             //white figures
+             Figure* figure = new Figure(Color::WHITE);
+             fields[i].setFigure(figure);
+             fields[i].setPicture();
+         }
+     }
+
+
+
+
+         /*if(i/8 < 3)
+         {
+             fields[i].setPicture(blackSimpleFigure);
+             fields[i].setColor(Color::BLACK);
+             //setPicture(i, "Images/redSimpleFigure.png");
+             //fields[i].empty = false;
+             //fields[i].color = 2;
              if(i/8 == 2)
              {
                  if(i == 23)
                  {
-                     fields[i].neighbors.push_back(30);
+                     fields[i].addMove(30);
                  }
                  else
                  {
-                     fields[i].neighbors.push_back(i+7);
-                     fields[i].neighbors.push_back(i+9);
+                     fields[i].addMove(i+7);
+                     fields[i].addMove(i+9);
                  }
                  blackMove.push_back(i);
              }
          }
          else if(i/8 > 4)
          {
-             setPicture(i, "Images/whiteSimpleFigure.png");
-             fields[i].empty = false;
-             fields[i].color = 1;
+             fields[i].setPicture(whiteSimpleFigure);
+             //setPicture(i, "Images/whiteSimpleFigure.png");
+             //fields[i].empty = false;
+             fields[i].setColor(Color::BLACK);
              if(i/8 == 5)
              {
                  if(i == 40)
                  {
-                     fields[i].neighbors.push_back(33);
+                     fields[i].addMove(33);
                  }
                  else
                  {
-                     fields[i].neighbors.push_back(i-7);
-                     fields[i].neighbors.push_back(i-9);
+                     fields[i].addMove(i-7);
+                     fields[i].addMove(i-9);
                  }
                  whiteMove.push_back(i);
              }
          }
          else
          {
-             setPicture(i, "Images/blackField.png");
-         }
-     }
+             fields[i].setPicture(blackField);
+              // setPicture(i, "Images/blackField.png");
+         }*/
+     //}
 }
 
 void Board::isClicked(int i)
 {
     prevActive = active;
     active = i;
-
-        if(prevActive == -1 && fields[i].color == 1)
+    //if plsyer`s figure was chosen and it was either first move or previous chosen field was empty
+    //mark chosen field and all possible moves
+    if((prevActive==-1 || !fields[prevActive].getFigure()) && player == fields[active].getColor())
+    {
+        markField(active);
+    }
+    //if players figure was chosen and previous chosen field contained opponents figure
+    //mark chosen field and all possible moves
+    else if(fields[prevActive].getFigure()&&fields[prevActive].getFigure()->getColor() != player && player == fields[active].getColor())
+    {
+        markField(active);
+    }
+    //if previous figure was player`s figure
+    else if(fields[prevActive].getFigure()&&fields[prevActive].getFigure()->getColor() == player)
+    {
+        deleteMark(active);
+        //if chosen field is black and empty
+        if(!fields[active].getFigure() && isBlackField(active))
+        {
+            //move
+            //maybe
+        }
+    }
+        /*if(prevActive == -1 && fields[i].getFigure()->getColor() == Color::BLACK)
         {
             markField(i);
         }
-        else if(!isBlackField(prevActive) && fields[i].color == 1)
+        else if(!isBlackField(prevActive) && fields[i].getFigure()->getColor()== Color::BLACK)
         {
             markField(i);
         }
@@ -242,7 +311,7 @@ void Board::isClicked(int i)
                 }
                 for(int p = 0; p < 64; ++p) fields[p].beat = false;
             }
-        }
+        }*/
 }
 
 
@@ -258,34 +327,49 @@ bool Board::isNeighbor(int i, int j)
 
 void Board::markField(int i)
 {
-    if(!fields[i].king)
+    fields[i].markField();
+
+    //mark all fields that this figure can beat
+    if(!fields[i].beats.empty())
     {
-        setPicture(i, "Images/chosenWhiteSimple.png");
+        for(int j = 0; j < fields[i].beats.size(); ++j)
+        {
+            fields[fields[i].beats[j]].markField();
+        }
+        return;
     }
-    else
+
+    //do nothing if player needs to beat but this figure cannot beat
+    if(whiteBeat && fields[i].getColor() == Color::WHITE || blackBeat&&fields[i].getColor()==Color::BLACK) return;
+
+    //mark all fields where figure can move
+    for(int j = 0; j < fields[i].moves.size(); ++j)
     {
-        setPicture(i, "Images/chosenWhiteKing.png");
-    }
-    for(int j = 0; j < fields[i].neighbors.size(); ++j)
-    {
-        setPicture(fields[i].neighbors[j], "Images/chosenEmptyField.png");
+        fields[fields[i].moves[j]].markField();
     }
 }
 
 void Board::deleteMark(int i)
 {
-    if(!fields[i].king)
-    {
-        setPicture(i, "Images/whiteSimpleFigure.png");
-    }
-    else
-    {
-        setPicture(i, "Images/whiteKingFigure.png");
-    }
-    for(int j = 0; j < fields[i].neighbors.size(); ++j)
-    {
-        setPicture(fields[i].neighbors[j], "Images/blackField.png");
+    fields[i].unmarkField();
 
+    //unmark all fields that this figure can beat
+    if(!fields[i].beats.empty())
+    {
+        for(int j = 0; j < fields[i].beats.size(); ++j)
+        {
+            fields[fields[i].beats[j]].unmarkField();
+        }
+        return;
+    }
+
+    //do nothing if player needs to beat but this figure cannot beat
+    if(whiteBeat && fields[i].getColor() == Color::WHITE || blackBeat&&fields[i].getColor()==Color::BLACK) return;
+
+    //unmark all fields where figure can move
+    for(int j = 0; j < fields[i].moves.size(); ++j)
+    {
+        fields[fields[i].moves[j]].unmarkField();
     }
 }
 

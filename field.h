@@ -43,7 +43,7 @@ public:
     Figure* getFigure();
     void setColor(Color c){fieldColor = c;}
     void setCoordinate(int coord){coordinate = coord;}
-    ClickableLabel* getCheckerbuttton
+    ClickableLabel* getCheckerbutton(){return checkerbutton;}
 
 private:
     QVector<int> moves; //all possible moves from this field

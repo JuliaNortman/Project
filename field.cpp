@@ -46,7 +46,7 @@ field::field(const field& obj)
     figure->setKing(obj.figure->isKing());
     figure->setColor(obj.figure->getColor());
     checkerbutton = new ClickableLabel;
-    checkerbutton = obj.checkerbutton;
+    checkerbutton->index = obj.checkerbutton->index;
 }
 
 field::~field()
