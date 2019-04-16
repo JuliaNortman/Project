@@ -24,8 +24,8 @@ public:
     void analyseField();
     bool needToBeatThisField(int, int);
     bool canMove(int, int);
-    void analyseKingField(bool&, int, QVector<int>&); //function that is used in analyseField for kings
-    void analyseSimpleField(bool&, int, int, QVector<int>&);
+    //void analyseKingField(bool&, int, QVector<int>&); //function that is used in analyseField for kings
+    //void analyseSimpleField(bool&, int, int, QVector<int>&);
     void move(int, int);
 
     //finds all fields where the figure from field i can move

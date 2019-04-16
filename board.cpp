@@ -59,7 +59,7 @@ Board::Board(Color pl)
             connect(fields[i].getCheckerbutton(), SIGNAL(clicked(int)), this, SLOT(isClicked(int)));
         }
     }
-    correctBoard();
+    //correctBoard();
 }
 
 //check if field is black
@@ -112,10 +112,10 @@ void Board::isClicked(int i)
     {
         deleteMark(prevActive);
         //if chosen field is black and empty
-        if(!fields[active].getFigure() && isBlackField(active))
+        if(!fields[active].getFigure() && isBlackField(active) && fields[prevActive].canMoveTo(active))
         {
             //move
-            //maybe
+            move(prevActive, active);
         }
         if(fields[active].getFigure() && fields[active].getFigure()->getColor() == player)
         {
@@ -381,6 +381,33 @@ void Board::correctBoard()
     }
     if(whiteBeat) whiteBeats.clear();
     if(blackBeat) blackBeats.clear();
+}
+
+void Board::move(int from, int to)
+{
+    // figure must beat
+    if(fields[from].getBeat())
+    {
+        int beatField = 0;
+        //calculate what field must be beaten
+        if(to-from == -18) beatField = from-9;
+        else if(to-from == -14) beatField = from-7;
+        else if(to-from == 7) beatField = from+7;
+        else if(to-from == 18) beatField = from+9;
+        //decrease number of figures
+        if(fields[beatField].getFigure()->getColor() == Color::BLACK) black--;
+        else white--;
+
+        fields[beatField].setPicture();
+
+        delete fields[beatField].getFigure();
+        fields[beatField].setFigure(nullptr);
+    }
+    fields[to].setFigure(fields[from].getFigure());
+    fields[from].setFigure(nullptr);
+    fields[from].setPicture();
+    fields[to].setPicture();
+    correctBoard();
 }
 
 /*

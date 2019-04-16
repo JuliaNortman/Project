@@ -55,7 +55,7 @@ public:
     void markField();
     void unmarkField(); //make the field as unchosen
     void addMove(int);
-
+    bool canMoveTo(int);
 
     QVector<int> moves; //all possible moves from this field
     QVector<int> beats; //all fields that the figure on this field needs to beat

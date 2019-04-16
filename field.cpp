@@ -121,3 +121,16 @@ Figure* field::removeFigure()
  {
      moves.push_back(i);
  }
+
+ bool field::canMoveTo(int to)
+ {
+     for(int i = 0; i < beats.size(); ++i)
+     {
+         if(beats[i] == to) return true;
+     }
+     for(int i = 0; i < moves.size(); ++i)
+     {
+         if(moves[i] == to) return true;
+     }
+     return false;
+ }
