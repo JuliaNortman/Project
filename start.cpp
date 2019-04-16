@@ -24,7 +24,7 @@ start::~start()
 
 void start::startGame(int k)
 {
-    Board *b = new Board(Color::BLACK);
+    Board *b = new Board(Color::WHITE);
     b->show();
     this->close();
 }

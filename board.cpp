@@ -59,6 +59,7 @@ Board::Board(Color pl)
             connect(fields[i].getCheckerbutton(), SIGNAL(clicked(int)), this, SLOT(isClicked(int)));
         }
     }
+    correctBoard();
 }
 
 //check if field is black
@@ -206,7 +207,7 @@ void Board::isClicked(int i)
         }*/
 }
 
-QVector<int> Board::neighborFields(int i)
+QVector<int> Board::neighborFieldsToMove(int i)
 {
     QVector<int> result;
     //if target field is black and free of figures and target field index is on the checker board and
@@ -333,7 +334,54 @@ void Board::deleteMark(int i)
     }
 }
 
+void Board::correctBoard()
+{
+    active = prevActive = -1;
+    whiteBeat = blackBeat = false;
+    whiteMove.clear();
+    blackMove.clear();
+    whiteBeats.clear();
+    blackBeats.clear();
+    for(int i = 0; i < SIZE; ++i)
+    {
+        fields[i].setBeat(false);
+        if(fields[i].getFigure())
+        {
+            fields[i].beats = neighborFieldsToBeat(i);//sets fields that must to be beat
+            if(!fields[i].beats.empty()) //if figure on this field must beat
+            {
+                fields[i].setBeat(true);
+                if(fields[i].getFigure()->getColor() == Color::WHITE)
+                {
+                    whiteBeat = true;
+                    whiteBeats.push_back(i);
+                }
+                else
+                {
+                    blackBeat = true;
+                    blackBeats.push_back(i);
+                }
+            }
 
+            fields[i].moves = neighborFieldsToMove(i);//sets all possible moves
+            //if figure has possible moves
+            //add figure to the possible moves on the board
+            if(!fields->moves.empty())
+            {
+                if(fields[i].getFigure()->getColor() == Color::WHITE)
+                {
+                    whiteMove.push_back(i);
+                }
+                else
+                {
+                    blackMove.push_back(i);
+                }
+            }
+        }
+    }
+    if(whiteBeat) whiteBeats.clear();
+    if(blackBeat) blackBeats.clear();
+}
 
 /*
 //analyse for king

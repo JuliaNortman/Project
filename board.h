@@ -29,9 +29,10 @@ public:
     void move(int, int);
 
     //finds all fields where the figure from field i can move
-    QVector<int> neighborFields(int);
+    QVector<int> neighborFieldsToMove(int);
     //finds all fields that the figure must beat
     QVector<int> neighborFieldsToBeat(int);
+    //sets correct neighbors to the all fields on the board
     void correctBoard();
 
 
