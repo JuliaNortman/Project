@@ -16,7 +16,7 @@ public:
     Board(Color pl);
     ~Board();
     void modelBoard(int);
-    void setPicture(int, QString);
+    //void setPicture(int, QString);
     bool isBlackField(int);
     bool isNeighbor(int, int);
     void markField(int); //???????? ????? ?????? ? ?? ???????
@@ -24,17 +24,23 @@ public:
     void analyseField();
     bool needToBeatThisField(int, int);
     bool canMove(int, int);
-    void analyseKingField(bool&, int, QVector<int>&); //function that is used in ana;yseField for kings
+    void analyseKingField(bool&, int, QVector<int>&); //function that is used in analyseField for kings
     void analyseSimpleField(bool&, int, int, QVector<int>&);
     void move(int, int);
+
+    //finds all fields where the figure from field i can move
+    QVector<int> neighborFields(int);
+    //finds all fields that the figure must beat
+    QVector<int> neighborFieldsToBeat(int);
+    void correctBoard();
 
 
 protected:
     int white; //quantaty of available white figures on the field
     int black; //quantaty of available black figures on the field
     field *fields;
-    int active; //index of field that is active at the present moment
-    int prevActive;
+    int active = -1; //index of field that is active at the present moment
+    int prevActive = -1;
     bool whiteBeat; //checks whether is needed to beat white figure
     bool blackBeat; //checks whether is needed to beat black figure
     QVector<int> whiteMove; //all white possible moves

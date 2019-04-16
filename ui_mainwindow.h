@@ -40,6 +40,8 @@ public:
     QHBoxLayout *layout8;
     QLabel *whiteNumber;
     QLabel *blackNuber;
+    QWidget *gridLayoutWidget_2;
+    QGridLayout *gridChBoard;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -70,7 +72,7 @@ public:
         centralWidget->setLayoutDirection(Qt::LeftToRight);
         gridLayoutWidget = new QWidget(centralWidget);
         gridLayoutWidget->setObjectName(QString::fromUtf8("gridLayoutWidget"));
-        gridLayoutWidget->setGeometry(QRect(170, 180, 351, 351));
+        gridLayoutWidget->setGeometry(QRect(10, 320, 221, 221));
         checkerBoard = new QGridLayout(gridLayoutWidget);
         checkerBoard->setSpacing(0);
         checkerBoard->setContentsMargins(11, 11, 11, 11);
@@ -136,6 +138,14 @@ public:
         blackNuber = new QLabel(centralWidget);
         blackNuber->setObjectName(QString::fromUtf8("blackNuber"));
         blackNuber->setGeometry(QRect(530, 20, 81, 41));
+        gridLayoutWidget_2 = new QWidget(centralWidget);
+        gridLayoutWidget_2->setObjectName(QString::fromUtf8("gridLayoutWidget_2"));
+        gridLayoutWidget_2->setGeometry(QRect(250, 120, 251, 251));
+        gridChBoard = new QGridLayout(gridLayoutWidget_2);
+        gridChBoard->setSpacing(0);
+        gridChBoard->setContentsMargins(11, 11, 11, 11);
+        gridChBoard->setObjectName(QString::fromUtf8("gridChBoard"));
+        gridChBoard->setContentsMargins(0, 0, 0, 0);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));

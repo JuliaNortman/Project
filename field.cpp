@@ -70,3 +70,54 @@ Figure* field::removeFigure()
  {
      return figure;
  }
+
+ void field::setPicture(const QString& path)
+ {
+     QPixmap checkerbuttonPix(path);
+     checkerbutton->setPixmap(checkerbuttonPix);
+     checkerbutton->setScaledContents(true);
+ }
+
+ void field::setPicture()
+ {
+     if(fieldColor == Color::WHITE) setPicture(whiteField);
+     else
+     {
+         if(!figure) setPicture(blackField);
+         else if(figure->getColor() == Color::WHITE)
+         {
+             if(figure->isKing()) setPicture(whiteKing);
+             else setPicture(whiteSimpleFigure);
+         }
+         else  if(figure->getColor() == Color::BLACK)
+         {
+             if(figure->isKing()) setPicture(blackKing);
+             else setPicture(blackSimpleFigure);
+         }
+      }
+ }
+
+ void field::markField()
+ {
+     if(!figure && fieldColor == Color::BLACK) setPicture(blackChosenField);
+     else if(figure->getColor() == Color::WHITE)
+     {
+         if(figure->isKing()) setPicture(whiteChosenKing);
+         else setPicture(whiteChosenFigure);
+     }
+     else  if(figure->getColor() == Color::BLACK)
+     {
+         if(figure->isKing()) setPicture(blackChosenKing);
+         else setPicture(blackChosenFigure);
+     }
+ }
+
+ void field::unmarkField()
+ {
+     setPicture();
+ }
+
+ void field::addMove(int i)
+ {
+     moves.push_back(i);
+ }

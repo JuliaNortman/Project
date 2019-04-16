@@ -42,21 +42,35 @@ public:
     Figure* removeFigure(); //remove figure from the field
     Figure* getFigure();
     void setColor(Color c){fieldColor = c;}
+    Color getColor(){return fieldColor;}
     void setCoordinate(int coord){coordinate = coord;}
+    int getCoordinate(){return coordinate;}
+    void setBeat(bool beat){this->beat = beat;}
+    bool getBeat(){return beat;}
     ClickableLabel* getCheckerbutton(){return checkerbutton;}
 
-private:
+    //sets correct picture according to the field color and figure
+    void setPicture();
+    //marks field as chosen
+    void markField();
+    void unmarkField(); //make the field as unchosen
+    void addMove(int);
+
+
     QVector<int> moves; //all possible moves from this field
     QVector<int> beats; //all fields that the figure on this field needs to beat
-    Color fieldColor = Color::WHITE;
+
+private:
+
+    Color fieldColor = Color::WHITE; //field`s color
     int coordinate = -1; //field coordinate on the board
-    Figure* figure = nullptr;
+    Figure* figure = nullptr; //figure on the field
     bool beat; // whether it is needed to beat this field or not
     ClickableLabel *checkerbutton = new ClickableLabel;
 
-
-
-
+    // sets picture of the field
+    // QString path - path of the picture
+    void setPicture(const QString& path);
 
     //bool king;
     //bool empty;
