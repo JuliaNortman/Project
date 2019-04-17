@@ -18,7 +18,10 @@ ClickableLabel::~ClickableLabel()
 
 void ClickableLabel::mousePressEvent(QMouseEvent* event)
 {
-    emit clicked(index);
+    if(active)
+    {
+        emit clicked(index);
+    }
 }
 
 void ClickableLabel::indexChange(int i)
@@ -95,6 +98,11 @@ Figure* field::removeFigure()
              else setPicture(blackSimpleFigure);
          }
       }
+ }
+
+ void field::setActive(bool active)
+ {
+     checkerbutton->active = active;
  }
 
  void field::markField()

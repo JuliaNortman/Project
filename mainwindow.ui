@@ -91,9 +91,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>320</y>
-      <width>221</width>
-      <height>221</height>
+      <y>520</y>
+      <width>161</width>
+      <height>71</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="checkerBoard">
@@ -194,10 +194,10 @@
    <widget class="QWidget" name="gridLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>120</y>
-      <width>251</width>
-      <height>251</height>
+      <x>260</x>
+      <y>100</y>
+      <width>351</width>
+      <height>351</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridChBoard">
@@ -205,6 +205,29 @@
       <number>0</number>
      </property>
     </layout>
+   </widget>
+   <widget class="QTextBrowser" name="debug">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>100</y>
+      <width>211</width>
+      <height>401</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="quitButton">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>0</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Quit</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

@@ -34,6 +34,7 @@ public:
     QVector<int> neighborFieldsToBeat(int);
     //sets correct neighbors to the all fields on the board
     void correctBoard();
+    void setActivity(bool);
 
 
 protected:
@@ -49,6 +50,7 @@ protected:
     QVector<int> whiteBeats; //all fields (white figures) that need to beat
     QVector<int> blackBeats; //all fields (black figures) that need to beat
     Color player; //what color of figures player plays
+    bool isActive = true;
 
 public slots:
     void isClicked(int i);

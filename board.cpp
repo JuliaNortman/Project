@@ -1,6 +1,8 @@
 #include "ui_mainwindow.h"
 #include "board.h"
 #include <cmath>
+#include <iostream>
+#include <string>
 #include <QRandomGenerator>
 #include <QDateTime>
 #include <QMovie>
@@ -59,7 +61,7 @@ Board::Board(Color pl)
             connect(fields[i].getCheckerbutton(), SIGNAL(clicked(int)), this, SLOT(isClicked(int)));
         }
     }
-    //correctBoard();
+    correctBoard();
 }
 
 //check if field is black
@@ -93,6 +95,7 @@ void Board::modelBoard(int i)
 
 void Board::isClicked(int i)
 {
+    ui->debug->append(QString::number(i)+'\n');
     prevActive = active;
     active = i;
     //if player`s figure was chosen and it was either first move or previous chosen field was empty
@@ -257,21 +260,20 @@ QVector<int> Board::neighborFieldsToBeat(int i)
     {
         result.push_back(i-14);
     }
-    if(i+9>=0 && i+18>=0 && isBlackField(i+18) && !fields[i+18].getFigure()
+    if(i+9<SIZE && i+18<SIZE && isBlackField(i+18) && !fields[i+18].getFigure()
             && fields[i+9].getFigure()
             && fields[i].getFigure()->getColor() != fields[i+9].getFigure()->getColor()
             && (fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::BLACK))
     {
         result.push_back(i+18);
     }
-    if(i+7>=0 && i+14>=0 && isBlackField(i+14) && !fields[i+14].getFigure()
+    if(i+7<SIZE && i+14<SIZE && isBlackField(i+14) && !fields[i+14].getFigure()
             && fields[i+7].getFigure()
             && fields[i].getFigure()->getColor() != fields[i+7].getFigure()->getColor()
             && (fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::BLACK))
     {
         result.push_back(i+14);
     }
-
     return result;
 }
 /*
@@ -336,12 +338,41 @@ void Board::deleteMark(int i)
 
 void Board::correctBoard()
 {
-    active = prevActive = -1;
     whiteBeat = blackBeat = false;
     whiteMove.clear();
     blackMove.clear();
     whiteBeats.clear();
     blackBeats.clear();
+
+    /*if figure need to continue to beat*/
+    if(!neighborFieldsToBeat(active).empty())
+    {
+        if(fields[active].getFigure()->getColor() == Color::BLACK)
+        {
+            blackBeat = true;
+            blackBeats.push_back(active);
+        }
+        else
+        {
+            whiteBeat = true;
+            whiteBeats.push_back(active);
+        }
+        for(int i = 0; i < SIZE; ++i)
+        {
+            if(fields[i].getFigure())
+            {
+                fields[i].moves.clear();
+                fields[i].beats.clear();
+                fields[i].setBeat(true);
+            }
+        }
+        fields[active].setBeat(true);
+        fields[active].beats = neighborFieldsToBeat(active);
+        active = prevActive = -1;
+        return;
+    }
+
+    active = prevActive = -1;
     for(int i = 0; i < SIZE; ++i)
     {
         fields[i].setBeat(false);
@@ -368,19 +399,13 @@ void Board::correctBoard()
             //add figure to the possible moves on the board
             if(!fields->moves.empty())
             {
-                if(fields[i].getFigure()->getColor() == Color::WHITE)
-                {
-                    whiteMove.push_back(i);
-                }
-                else
-                {
-                    blackMove.push_back(i);
-                }
+                if(fields[i].getFigure()->getColor() == Color::WHITE) whiteMove.push_back(i);
+                else blackMove.push_back(i);
             }
         }
     }
-    if(whiteBeat) whiteBeats.clear();
-    if(blackBeat) blackBeats.clear();
+    if(whiteBeat) whiteMove.clear();
+    if(blackBeat) blackMove.clear();
 }
 
 void Board::move(int from, int to)
@@ -402,6 +427,12 @@ void Board::move(int from, int to)
 
         delete fields[beatField].getFigure();
         fields[beatField].setFigure(nullptr);
+    }
+    /*set figure to be a king if it reached the line*/
+    if((fields[to].getFigure()->getColor() == Color::BLACK && to/8 == 7)
+            ||(fields[to].getFigure()->getColor() == Color::WHITE && to/8 == 0))
+    {
+        fields[to].getFigure()->becomeKing();
     }
     fields[to].setFigure(fields[from].getFigure());
     fields[from].setFigure(nullptr);
@@ -783,7 +814,17 @@ bool Board::canMove(int i, int j)
     return  true;
 }*/
 
+void Board::setActivity(bool active)
+{
+    isActive = active;
+    for(int i = 0; i < SIZE; ++i)
+    {
+        fields[i].setActive(active);
+    }
+}
+
 Board::~Board()
 {
+    delete [] fields;
 }
 

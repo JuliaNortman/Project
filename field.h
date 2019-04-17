@@ -21,6 +21,7 @@ public:
     explicit ClickableLabel(QWidget* parent=nullptr );
     ~ClickableLabel();
     int index;
+    bool active = true;
     void indexChange(int);
 
 signals:
@@ -47,6 +48,7 @@ public:
     int getCoordinate(){return coordinate;}
     void setBeat(bool beat){this->beat = beat;}
     bool getBeat(){return beat;}
+    void setActive(bool active);
     ClickableLabel* getCheckerbutton(){return checkerbutton;}
 
     //sets correct picture according to the field color and figure
@@ -61,7 +63,8 @@ public:
     QVector<int> beats; //all fields that the figure on this field needs to beat
 
 private:
-
+    //moves
+    //beats
     Color fieldColor = Color::WHITE; //field`s color
     int coordinate = -1; //field coordinate on the board
     Figure* figure = nullptr; //figure on the field
