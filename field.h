@@ -1,6 +1,4 @@
-#ifndef FIELD_H
-#define FIELD_H
-
+#pragma once
 
 #include <QMainWindow>
 #include <QObject>
@@ -85,6 +83,3 @@ private:
 };
 
 
-
-
-#endif // FIELD_H

@@ -2,6 +2,7 @@
 #include "ui_start.h"
 #include "field.h"
 #include "board.h"
+#include "player.h"
 
 start::start(QWidget *parent) :
     QDialog(parent),
@@ -24,7 +25,9 @@ start::~start()
 
 void start::startGame(int k)
 {
-    Board *b = new Board(Color::BLACK);
+    Board *b = new Board(Color::WHITE);
     b->show();
+   /* MainWindow *wnd = new MainWindow;
+    wnd->show();*/
     this->close();
 }

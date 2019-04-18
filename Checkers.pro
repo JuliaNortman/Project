@@ -31,7 +31,8 @@ SOURCES += \
     field.cpp \
     start.cpp \
     figure.cpp \
-    player.cpp
+    player.cpp \
+    game.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,7 +41,8 @@ HEADERS += \
     start.h \
     constants.h \
     figure.h \
-    player.h
+    player.h \
+    game.h
 
 FORMS += \
     mainwindow.ui \

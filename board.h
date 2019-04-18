@@ -1,5 +1,4 @@
-#ifndef BOARD_H
-#define BOARD_H
+#pragma once
 
 
 #include <QMainWindow>
@@ -7,13 +6,16 @@
 #include <QWidget>
 #include <QVector>
 #include "field.h"
+#include "player.h"
 #include "constants.h"
+
+class Player;
 
 class Board :public field
 {
     Q_OBJECT
 public:
-    Board(Color pl);
+    Board(Color col);
     ~Board();
     void modelBoard(int);
     //void setPicture(int, QString);
@@ -35,6 +37,7 @@ public:
     //sets correct neighbors to the all fields on the board
     void correctBoard();
     void setActivity(bool);
+    void setCurrentPlayer(Player* pl){currentPlayer = pl;}/*sets current player who is active at the moment*/
 
 
 protected:
@@ -49,11 +52,12 @@ protected:
     QVector<int> blackMove; //all black possible moves
     QVector<int> whiteBeats; //all fields (white figures) that need to beat
     QVector<int> blackBeats; //all fields (black figures) that need to beat
-    Color player; //what color of figures player plays
+    Color player; //what color of figures main player plays
     bool isActive = true;
+
+    Player* currentPlayer;/*who is active at present moment*/
 
 public slots:
     void isClicked(int i);
 };
 
-#endif // BOARD_H

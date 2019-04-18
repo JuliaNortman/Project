@@ -1,8 +1,7 @@
-#ifndef FIGURE_H
-#define FIGURE_H
-
+#pragma once
 #include <QObject>
 #include "constants.h"
+#include "mainwindow.h"
 
 class Figure : public QObject
 {
@@ -24,5 +23,3 @@ signals:
 
 public slots:
 };
-
-#endif // FIGURE_H

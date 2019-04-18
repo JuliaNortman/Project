@@ -12,8 +12,8 @@
 #include <QHBoxLayout>
 #include "constants.h"
 
-Board::Board(Color pl)
-    :player(pl)
+Board::Board(Color col)
+    :player(col)
 {
     fields = new field[SIZE];
     whiteBeat = blackBeat = false;
@@ -338,6 +338,7 @@ void Board::deleteMark(int i)
 
 void Board::correctBoard()
 {
+    qDebug("start correct");
     whiteBeat = blackBeat = false;
     whiteMove.clear();
     blackMove.clear();
@@ -347,6 +348,8 @@ void Board::correctBoard()
     /*if figure need to continue to beat*/
     if(!neighborFieldsToBeat(active).empty())
     {
+        qDebug("Continue beat");
+        currentPlayer->setCanMove(true);/*need to move again*/
         if(fields[active].getFigure()->getColor() == Color::BLACK)
         {
             blackBeat = true;
@@ -375,6 +378,7 @@ void Board::correctBoard()
     active = prevActive = -1;
     for(int i = 0; i < SIZE; ++i)
     {
+        qDebug(std::to_string(i).c_str());
         fields[i].setBeat(false);
         if(fields[i].getFigure())
         {
@@ -406,13 +410,17 @@ void Board::correctBoard()
     }
     if(whiteBeat) whiteMove.clear();
     if(blackBeat) blackMove.clear();
+    currentPlayer->setCanMove(true);/*it is next player`s turn to move*/
+    qDebug("End correct");
 }
 
 void Board::move(int from, int to)
 {
+    qDebug("start move");
     // figure must beat
     if(fields[from].getBeat())
     {
+        qDebug("must beat");
         int beatField = 0;
         //calculate what field must be beaten
         if(to-from == -18) beatField = from-9;
@@ -429,15 +437,21 @@ void Board::move(int from, int to)
         fields[beatField].setFigure(nullptr);
     }
     /*set figure to be a king if it reached the line*/
-    if((fields[to].getFigure()->getColor() == Color::BLACK && to/8 == 7)
-            ||(fields[to].getFigure()->getColor() == Color::WHITE && to/8 == 0))
+    if(fields[to].getFigure() && ((fields[to].getFigure()->getColor() == Color::BLACK && to/8 == 7)
+            ||(fields[to].getFigure()->getColor() == Color::WHITE && to/8 == 0)))
     {
+        qDebug("becomes king");
         fields[to].getFigure()->becomeKing();
     }
+    qDebug("set figure");
     fields[to].setFigure(fields[from].getFigure());
+    qDebug("remove figure");
     fields[from].setFigure(nullptr);
+    qDebug("set picture from");
     fields[from].setPicture();
+    qDebug("set picture to");
     fields[to].setPicture();
+    qDebug("end Move");
     correctBoard();
 }
 

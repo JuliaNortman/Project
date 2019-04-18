@@ -1,6 +1,6 @@
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#pragma once
 #include <QString>
+#include "mainwindow.h"
 
 enum class Color
 {
@@ -22,5 +22,3 @@ const QString whiteChosenFigure = "Images/whiteChosenFigure.png";
 const QString blackChosenKing = "Images/blackChosenKing.png";
 const QString whiteChosenKing = "Images/whiteChosenKing.png";
 
-
-#endif // CONSTANTS_H

@@ -1,6 +1,6 @@
 #include "player.h"
 
-Player::Player(Board* b, Color c)
+Player::Player(Board *b, Color c)
     :board(b), color(c)
 {
 
@@ -26,4 +26,14 @@ void Person::changeFieldActivity()
 void Bot::changeFieldActivity()
 {
     board->setActivity(false);
+}
+
+void Person::move()
+{
+    changeFieldActivity();
+}
+
+void Bot::move()
+{
+    changeFieldActivity();
 }

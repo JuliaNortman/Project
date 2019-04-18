@@ -1,7 +1,7 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QMainWindow>
+
 
 namespace Ui {
 class MainWindow;
@@ -17,8 +17,6 @@ public:
 
 //protected:
     Ui::MainWindow *ui;
+    //Board* b;
 private slots:
-    void on_quitButton_clicked();
 };
-
-#endif // MAINWINDOW_H

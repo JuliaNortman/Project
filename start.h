@@ -1,8 +1,8 @@
-#ifndef START_H
-#define START_H
+#pragma once
 
 #include <QDialog>
 #include "field.h"
+#include "mainwindow.h"
 
 namespace Ui {
 class start;
@@ -21,4 +21,3 @@ private:
     Ui::start *ui;
 };
 
-#endif // START_H
