@@ -1,19 +1,19 @@
 #include "player.h"
 
-Player::Player(Board *b, Color c)
-    :board(b), color(c)
+Player::Player(Color c)
+    :color(c)
 {
 
 }
 
-Person::Person(Board *b, Color c)
-    :Player(b, c)
+Person::Person(Color c)
+    :Player(c)
 {
 
 }
 
-Bot::Bot(Board *b, Color c)
-    :Player(b, c)
+Bot::Bot(Color c)
+    :Player(c)
 {
 
 }
@@ -31,9 +31,11 @@ void Bot::changeFieldActivity()
 void Person::move()
 {
     changeFieldActivity();
+    qDebug("Person move");
 }
 
 void Bot::move()
 {
     changeFieldActivity();
+    qDebug("Bot move");
 }

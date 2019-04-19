@@ -13,6 +13,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QTextBrowser>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -24,6 +25,7 @@ public:
     QWidget *verticalLayoutWidget;
     QVBoxLayout *startLable;
     QTextBrowser *rules;
+    QToolButton *toolButton;
 
     void setupUi(QDialog *start)
     {
@@ -55,6 +57,9 @@ public:
         rules = new QTextBrowser(start);
         rules->setObjectName(QString::fromUtf8("rules"));
         rules->setGeometry(QRect(150, 160, 341, 361));
+        toolButton = new QToolButton(start);
+        toolButton->setObjectName(QString::fromUtf8("toolButton"));
+        toolButton->setGeometry(QRect(544, 30, 61, 21));
 
         retranslateUi(start);
 
@@ -79,6 +84,7 @@ public:
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#000000;\">Capturing is mandatory in Italian draughts. Should a man be found neighbouring an opposing piece behind which is an empty position, the player is compelled to attain this empty position and remove the opposing man from the board. Men may only capture diagonally forward. Kings move, as well as capture, backwards.</span></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; color:#000000;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#000000;\">A player wins when he has succeeded in capturing all of his opponent's pieces, or if his opponent resigns, or there are no possible moves left.</span></p></body></html>", nullptr));
+        toolButton->setText(QApplication::translate("start", "Settings", nullptr));
     } // retranslateUi
 
 };

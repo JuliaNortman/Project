@@ -32,7 +32,8 @@ SOURCES += \
     start.cpp \
     figure.cpp \
     player.cpp \
-    game.cpp
+    game.cpp \
+    settings.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -42,11 +43,13 @@ HEADERS += \
     constants.h \
     figure.h \
     player.h \
-    game.h
+    game.h \
+    settings.h
 
 FORMS += \
     mainwindow.ui \
-    start.ui
+    start.ui \
+    settings.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

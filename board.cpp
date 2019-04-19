@@ -12,9 +12,10 @@
 #include <QHBoxLayout>
 #include "constants.h"
 
-Board::Board(Color col)
-    :player(col)
+Board::Board(Player* plyr)
+    :currentPlayer(plyr)
 {
+    this->player = currentPlayer->getColor();
     fields = new field[SIZE];
     whiteBeat = blackBeat = false;
     active = prevActive = -1;
@@ -340,11 +341,13 @@ void Board::correctBoard()
 {
     qDebug("start correct");
     whiteBeat = blackBeat = false;
+    qDebug("before white move clear");
     whiteMove.clear();
     blackMove.clear();
     whiteBeats.clear();
     blackBeats.clear();
 
+    qDebug("after clear");
     /*if figure need to continue to beat*/
     if(!neighborFieldsToBeat(active).empty())
     {
@@ -374,8 +377,9 @@ void Board::correctBoard()
         active = prevActive = -1;
         return;
     }
-
+    //qDebug("before active");
     active = prevActive = -1;
+    //qDebug("after active");
     for(int i = 0; i < SIZE; ++i)
     {
         qDebug(std::to_string(i).c_str());
@@ -406,11 +410,13 @@ void Board::correctBoard()
                 if(fields[i].getFigure()->getColor() == Color::WHITE) whiteMove.push_back(i);
                 else blackMove.push_back(i);
             }
+            qDebug("end for loop");
         }
     }
     if(whiteBeat) whiteMove.clear();
     if(blackBeat) blackMove.clear();
-    currentPlayer->setCanMove(true);/*it is next player`s turn to move*/
+    qDebug("before setCanMove");
+    if(currentPlayer)currentPlayer->setCanMove(true);/*it is next player`s turn to move*/
     qDebug("End correct");
 }
 
@@ -835,6 +841,20 @@ void Board::setActivity(bool active)
     {
         fields[i].setActive(active);
     }
+}
+
+bool Board::gameEnd(Color color)
+{
+    /*returns true if there is no possible moves for that color*/
+    if(color == Color::BLACK)
+    {
+        if(whiteMove.empty() && whiteBeats.empty()) return true;
+    }
+    else
+    {
+        if(blackMove.empty() && blackBeats.empty()) return true;
+    }
+    return false;
 }
 
 Board::~Board()

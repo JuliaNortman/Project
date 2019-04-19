@@ -15,7 +15,7 @@ class Board :public field
 {
     Q_OBJECT
 public:
-    Board(Color col);
+    Board(Player* player);
     ~Board();
     void modelBoard(int);
     //void setPicture(int, QString);
@@ -38,6 +38,7 @@ public:
     void correctBoard();
     void setActivity(bool);
     void setCurrentPlayer(Player* pl){currentPlayer = pl;}/*sets current player who is active at the moment*/
+    bool gameEnd(Color color);/*returns true if the game is over*/
 
 
 protected:
@@ -55,7 +56,7 @@ protected:
     Color player; //what color of figures main player plays
     bool isActive = true;
 
-    Player* currentPlayer;/*who is active at present moment*/
+    Player* currentPlayer = nullptr;/*who is active at present moment*/
 
 public slots:
     void isClicked(int i);

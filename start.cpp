@@ -3,6 +3,8 @@
 #include "field.h"
 #include "board.h"
 #include "player.h"
+#include "game.h"
+#include "settings.h"
 
 start::start(QWidget *parent) :
     QDialog(parent),
@@ -25,9 +27,33 @@ start::~start()
 
 void start::startGame(int k)
 {
-    Board *b = new Board(Color::WHITE);
-    b->show();
+    /*Board *b = new Board(Color::BLACK);
+    b->show();*/
    /* MainWindow *wnd = new MainWindow;
     wnd->show();*/
+    if(!player1)
+    {
+        player1 = new Person(Color::WHITE);
+    }
+    if(!player2)
+    {
+        player2 = new Bot(Color::BLACK);
+    }
+    if(player1->getColor() == Color::WHITE)game = new Game(player1, player2);
+    else game = new Game(player2, player1);
     this->close();
+}
+
+void start::setPlayers(Player *pl1, Player *pl2)
+{
+    if(player1) delete player1;
+    if(player2) delete player2;
+    player1 = pl1;
+    player2 = pl2;
+}
+
+void start::on_toolButton_clicked()
+{
+    s = new Settings(this);
+    s->exec();
 }
