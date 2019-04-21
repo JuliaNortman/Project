@@ -3,18 +3,22 @@
 
 #include "player.h"
 
-class Game
+class Game :public QObject
 {
+       Q_OBJECT
 private:
     Player* player1;
     Player* player2;
-    Player* currentPlayer;/*who is active at the moment*/
     Board *board;
 
 
 public:
     Game(Player*, Player*);
     bool endOfGame();
+
+public slots:
+    void play(Player*);
+
 };
 
 #endif // GAME_H

@@ -459,6 +459,8 @@ void Board::move(int from, int to)
     fields[to].setPicture();
     qDebug("end Move");
     correctBoard();
+    /*emit signal to inform that another player can move*/
+    emit(moved(currentPlayer));
 }
 
 /*

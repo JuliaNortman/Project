@@ -40,6 +40,12 @@ public:
     void setCurrentPlayer(Player* pl){currentPlayer = pl;}/*sets current player who is active at the moment*/
     bool gameEnd(Color color);/*returns true if the game is over*/
 
+    QVector<int> getWhiteMove(){return whiteMove;}
+    QVector<int> getBlackMove(){return blackMove;}
+    QVector<int> getWhiteBeat(){return whiteBeats;}
+    QVector<int> getBlackBeat(){return blackBeats;}
+    QVector<int> getFieldBeats(int i){return fields[i].beats;}
+    QVector<int> getFieldsMoves(int i){return fields[i].moves;}
 
 protected:
     int white; //quantaty of available white figures on the field
@@ -60,5 +66,7 @@ protected:
 
 public slots:
     void isClicked(int i);
+signals:
+    void moved(Player*);/*emits when player has moved*/
 };
 

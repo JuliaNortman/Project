@@ -15,9 +15,6 @@ public:
     Player(Color c);
     virtual ~Player() = default;
     virtual void move() = 0;
-    /*makes board unactive if current player is not a person
-    and active if it is a person*/
-    virtual void changeFieldActivity() = 0;
     bool getCanMove(){return canMove;}
     void setCanMove(bool canMove){this->canMove = canMove;}
     Color getColor(){return color;}
@@ -29,7 +26,7 @@ class  Person : public Player
 public:
     Person(Color c);
     void move() override;
-    void changeFieldActivity() override;
+    void setBoardActive();
 };
 
 class  Bot : public Player
@@ -37,6 +34,8 @@ class  Bot : public Player
 public:
     Bot( Color c);
     void move() override;
-    void changeFieldActivity() override;
+    void setBoardActive();
+    void setBoardUnactive();
+    void think(int&, int&);/*AI*/
 };
 
