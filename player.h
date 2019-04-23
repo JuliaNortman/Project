@@ -19,6 +19,7 @@ public:
     void setCanMove(bool canMove){this->canMove = canMove;}
     Color getColor(){return color;}
     void setBoard(Board* pBoard){board = pBoard;}
+    virtual bool isBot() = 0;
 };
 
 class  Person : public Player
@@ -27,6 +28,7 @@ public:
     Person(Color c);
     void move() override;
     void setBoardActive();
+    bool isBot()override {return  false;}
 };
 
 class  Bot : public Player
@@ -37,5 +39,6 @@ public:
     void setBoardActive();
     void setBoardUnactive();
     void think(int&, int&);/*AI*/
+    bool isBot()override {return  true;}
 };
 

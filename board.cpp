@@ -219,23 +219,29 @@ QVector<int> Board::neighborFieldsToMove(int i)
     if(i-9 >= 0 && isBlackField(i-9) && !fields[i-9].getFigure()
             &&(fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::WHITE))
     {
+        qDebug("i-9");
         result.push_back(i-9);
     }
     if(i+9 < SIZE && isBlackField(i+9) && !fields[i+9].getFigure()
             &&(fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::BLACK))
     {
+        qDebug("i+9");
         result.push_back(i+9);
     }
     if(i-7 >= 0 && isBlackField(i-7) && !fields[i-7].getFigure()
             &&(fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::WHITE))
     {
+        qDebug("i-7");
         result.push_back(i-7);
     }
     if(i+7 < SIZE && isBlackField(i+7) && !fields[i+7].getFigure()
             &&(fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::BLACK))
     {
+        qDebug("i+7");
         result.push_back(i+7);
     }
+    qDebug("result size");
+    qDebug(std::to_string(result.size()).c_str());
     return result;
 }
 
@@ -341,18 +347,21 @@ void Board::correctBoard()
 {
     qDebug("start correct");
     whiteBeat = blackBeat = false;
-    qDebug("before white move clear");
+    //qDebug("before white move clear");
     whiteMove.clear();
     blackMove.clear();
     whiteBeats.clear();
     blackBeats.clear();
 
-    qDebug("after clear");
-    /*if figure need to continue to beat*/
-    if(!neighborFieldsToBeat(active).empty())
+    //qDebug("after clear");
+    /*figure need to continue to beat
+    *it has possiblebeat moves and it`s previous move was beat
+    */
+    if(!neighborFieldsToBeat(active).empty() && fields[active].getFigure()->getBeat())
     {
-        qDebug("Continue beat");
+        //qDebug("Continue beat");
         currentPlayer->setCanMove(true);/*need to move again*/
+        fields[active].setBeat(true);
         if(fields[active].getFigure()->getColor() == Color::BLACK)
         {
             blackBeat = true;
@@ -387,6 +396,8 @@ void Board::correctBoard()
         if(fields[i].getFigure())
         {
             fields[i].beats = neighborFieldsToBeat(i);//sets fields that must to be beat
+            qDebug("beats size: ");
+            qDebug(std::to_string(beats.size()).c_str());
             if(!fields[i].beats.empty()) //if figure on this field must beat
             {
                 fields[i].setBeat(true);
@@ -403,6 +414,8 @@ void Board::correctBoard()
             }
 
             fields[i].moves = neighborFieldsToMove(i);//sets all possible moves
+            qDebug("moves size: ");
+            qDebug(std::to_string(moves.size()).c_str());
             //if figure has possible moves
             //add figure to the possible moves on the board
             if(!fields->moves.empty())
@@ -410,13 +423,13 @@ void Board::correctBoard()
                 if(fields[i].getFigure()->getColor() == Color::WHITE) whiteMove.push_back(i);
                 else blackMove.push_back(i);
             }
-            qDebug("end for loop");
+            //qDebug("end for loop");
         }
     }
     if(whiteBeat) whiteMove.clear();
     if(blackBeat) blackMove.clear();
-    qDebug("before setCanMove");
-    if(currentPlayer)currentPlayer->setCanMove(true);/*it is next player`s turn to move*/
+    //qDebug("before setCanMove");
+    if(currentPlayer)currentPlayer->setCanMove(false);/*it is next player`s turn to move*/
     qDebug("End correct");
 }
 
@@ -426,7 +439,8 @@ void Board::move(int from, int to)
     // figure must beat
     if(fields[from].getBeat())
     {
-        qDebug("must beat");
+        //qDebug("must beat");
+        fields[from].getFigure()->setBeat(true);
         int beatField = 0;
         //calculate what field must be beaten
         if(to-from == -18) beatField = from-9;
@@ -437,27 +451,30 @@ void Board::move(int from, int to)
         if(fields[beatField].getFigure()->getColor() == Color::BLACK) black--;
         else white--;
 
-        fields[beatField].setPicture();
-
         delete fields[beatField].getFigure();
         fields[beatField].setFigure(nullptr);
+
+        fields[beatField].setPicture();
+    }
+    else {
+        fields[from].getFigure()->setBeat(false);
     }
     /*set figure to be a king if it reached the line*/
     if(fields[to].getFigure() && ((fields[to].getFigure()->getColor() == Color::BLACK && to/8 == 7)
             ||(fields[to].getFigure()->getColor() == Color::WHITE && to/8 == 0)))
     {
-        qDebug("becomes king");
+        //qDebug("becomes king");
         fields[to].getFigure()->becomeKing();
     }
-    qDebug("set figure");
+    //qDebug("set figure");
     fields[to].setFigure(fields[from].getFigure());
-    qDebug("remove figure");
+    //qDebug("remove figure");
     fields[from].setFigure(nullptr);
-    qDebug("set picture from");
+    //qDebug("set picture from");
     fields[from].setPicture();
-    qDebug("set picture to");
+    //qDebug("set picture to");
     fields[to].setPicture();
-    qDebug("end Move");
+    //qDebug("end Move");
     correctBoard();
     /*emit signal to inform that another player can move*/
     emit(moved(currentPlayer));
