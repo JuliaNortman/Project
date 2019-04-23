@@ -25,7 +25,8 @@ public:
     void deleteMark(int); //?????? ????????? ? ????? ?????? ? ?? ???????
     void analyseField();
     bool needToBeatThisField(int, int);
-    bool canMove(int, int);
+    /*whether the field can be moved*/
+    bool canMove(int);
     //void analyseKingField(bool&, int, QVector<int>&); //function that is used in analyseField for kings
     //void analyseSimpleField(bool&, int, int, QVector<int>&);
     void move(int, int);
@@ -46,6 +47,12 @@ public:
     QVector<int> getBlackBeat(){return blackBeats;}
     QVector<int> getFieldBeats(int i){return fields[i].beats;}
     QVector<int> getFieldsMoves(int i){return fields[i].moves;}
+    /*sets from and to field after bot move*/
+    void setActivePrevactive(int from, int to)
+    {
+        active = to;
+        prevActive = from;
+    }
 
 protected:
     int white; //quantaty of available white figures on the field
