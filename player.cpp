@@ -37,7 +37,7 @@ void Person::move()
 {
     qDebug("before person move");
     setBoardActive();
-    //qDebug("Person move end");
+    qDebug("Person move end");
 }
 
 void Bot::think(int& from, int& to)
@@ -107,6 +107,11 @@ void Bot::move()
     setBoardUnactive();
     while(canMove)
     {
+        QTime time;
+        time.start();
+        for(;time.elapsed() < 1500;) {
+            QApplication::processEvents(nullptr);
+        }
         //qDebug("while");
         int from = -1, to = -1;
         think(from, to);

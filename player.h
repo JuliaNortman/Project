@@ -2,11 +2,14 @@
 #include "board.h"
 #include "mainwindow.h"
 #include <QWidget>
+#include <QApplication>
+#include <QTime>
 
 class Board;
 
-class Player
+class Player :public QObject
 {
+    Q_OBJECT
 protected:
     Board *board;
     Color color;

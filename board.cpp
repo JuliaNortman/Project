@@ -147,8 +147,8 @@ void Board::isClicked(int i)
         if(!fields[active].getFigure() && isBlackField(active) &&
                 fields[prevActive].canMoveTo(active, whiteBeat, blackBeat, currentPlayer->getColor()) && canMove(active))
         {
-            ui->debug->append("move");
             //move
+            qDebug("move");
             move(prevActive, active);
         }
         if(fields[active].getFigure() && fields[active].getFigure()->getColor() == player)
@@ -342,6 +342,7 @@ void Board::markField(int i)
         {
             fields[fields[i].beats[j]].markField();
         }
+        fields[i].moves.clear();
         return;
     }
 
@@ -521,8 +522,16 @@ void Board::move(int from, int to)
         else if(to-from == 14) beatField = from+7;
         else if(to-from == 18) beatField = from+9;
         //decrease number of figures
-        if(fields[beatField].getFigure()->getColor() == Color::BLACK) black--;
-        else white--;
+        if(fields[beatField].getFigure()->getColor() == Color::BLACK)
+        {
+            black--;
+            ui->blackNuber->setText(std::to_string(black).c_str());
+        }
+        else
+        {
+            white--;
+            ui->whiteNumber->setText(std::to_string(white).c_str());
+        }
 
         delete fields[beatField].getFigure();
         fields[beatField].setFigure(nullptr);
@@ -532,6 +541,12 @@ void Board::move(int from, int to)
     else {
         fields[from].getFigure()->setBeat(false);
     }
+
+
+    //qDebug("set figure");
+    fields[to].setFigure(fields[from].getFigure());
+    //qDebug("remove figure");
+    fields[from].setFigure(nullptr);
     /*set figure to be a king if it reached the line*/
     if(fields[to].getFigure() && ((fields[to].getFigure()->getColor() == Color::BLACK && to/8 == 7)
             ||(fields[to].getFigure()->getColor() == Color::WHITE && to/8 == 0)))
@@ -539,10 +554,6 @@ void Board::move(int from, int to)
         //qDebug("becomes king");
         fields[to].getFigure()->becomeKing();
     }
-    //qDebug("set figure");
-    fields[to].setFigure(fields[from].getFigure());
-    //qDebug("remove figure");
-    fields[from].setFigure(nullptr);
     //qDebug("set picture from");
     fields[from].setPicture();
     //qDebug("set picture to");

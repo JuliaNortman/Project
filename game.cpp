@@ -20,13 +20,12 @@ Game::Game(Player* pl1, Player* pl2)
 
 bool Game::endOfGame()
 {
-    return false;
+    return gameEnd;
 }
 
 void Game::play(Player* currentPlayer)
 {
-    //qDebug("Slot");
-    if(endOfGame()) return;
+    qDebug("Slot");
     if(!currentPlayer->getCanMove())
     {
         //qDebug("end of current player moves");
@@ -45,6 +44,8 @@ void Game::play(Player* currentPlayer)
              //qDebug("player1");
         }
         currentPlayer->setCanMove(true);
+        gameEnd = board->gameEnd(currentPlayer->getColor());
+        if(endOfGame()) return;
     }
     board->setCurrentPlayer(currentPlayer);
     //if(currentPlayer->getColor() == Color::BLACK) qDebug("black current player");
