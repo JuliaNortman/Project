@@ -37,7 +37,7 @@ void Person::move()
 {
     qDebug("before person move");
     setBoardActive();
-    qDebug("Person move end");
+    //qDebug("Person move end");
 }
 
 void Bot::think(int& from, int& to)
@@ -45,60 +45,60 @@ void Bot::think(int& from, int& to)
     QVector<int> beat, move;
     if(color == Color::WHITE)
     {
-        qDebug("color white");
+        //qDebug("color white");
         beat = board->getWhiteBeat();
         move = board->getWhiteMove();
     }
     else
     {
-        qDebug("color black");
+        //qDebug("color black");
         beat = board->getBlackBeat();
         move = board->getBlackMove();
     }
-    qDebug("beat size: move size:");
-    qDebug(std::to_string(beat.size()).c_str());
-    qDebug(std::to_string(move.size()).c_str());
+    //qDebug("beat size: move size:");
+    //qDebug(std::to_string(beat.size()).c_str());
+    //qDebug(std::to_string(move.size()).c_str());
     if(!beat.empty())
     {
         int i = rand()%beat.size();
         if(i != 0) i--;
-        qDebug(std::to_string(i).c_str());
-        qDebug(std::to_string(beat[i]).c_str());
+        //qDebug(std::to_string(i).c_str());
+        //qDebug(std::to_string(beat[i]).c_str());
         from = beat[i];
-        qDebug("from beat");
+        //qDebug("from beat");
     }
     else if(!move.empty())
     {
         int i = rand()%move.size();
         if(i != 0) i--;
         from = move[i];
-        qDebug("from move");
+        //qDebug("from move");
     }
     if(from != -1)
     {
         beat = board->getFieldBeats(from);
         move = board->getFieldsMoves(from);
-        qDebug("move/beat size:");
+        /*qDebug("move/beat size:");
         qDebug(std::to_string(beat.size()).c_str());
-        qDebug(std::to_string(move.size()).c_str());
+        qDebug(std::to_string(move.size()).c_str());*/
         if(!beat.empty())
         {
             int i = rand()%beat.size();
             if(i != 0) i--;
             to = beat[i];
-            qDebug("to beat");
+            //qDebug("to beat");
         }
         else if(!move.empty())
         {
             int i = rand()%move.size();
             if(i != 0) i--;
             to = move[i];
-            qDebug("to Move");
+            //qDebug("to Move");
         }
     }
-    qDebug("From: To:");
+    /*qDebug("From: To:");
     qDebug(std::to_string(from).c_str());
-    qDebug(std::to_string(to).c_str());
+    qDebug(std::to_string(to).c_str());*/
 }
 
 void Bot::move()
@@ -107,12 +107,12 @@ void Bot::move()
     setBoardUnactive();
     while(canMove)
     {
-        qDebug("while");
+        //qDebug("while");
         int from = -1, to = -1;
         think(from, to);
         if(from != -1 && to != -1)
         {
-            qDebug("real bot move");
+            //qDebug("real bot move");
             board->setActivePrevactive(from, to);
             board->move(from, to);
         }
@@ -120,5 +120,5 @@ void Bot::move()
     }
 
     setBoardActive();
-    qDebug("End bot move");
+    //qDebug("End bot move");
 }

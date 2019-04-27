@@ -130,15 +130,40 @@ Figure* field::removeFigure()
      moves.push_back(i);
  }
 
- bool field::canMoveTo(int to)
+ bool field::canMoveTo(int to, bool blackBeat, bool whiteBeat, Color col)
  {
+     //qDebug("start move to");
+     /*if(beat) qDebug("beat");
+     else if(!beat) qDebug("not beat");
+     if(col == Color::WHITE)qDebug("CURRENT PLAYER COLOR IS WHITE");
+     if(col == Color::BLACK)qDebug("CURRENT PLAYER COLOR IS BLACK");*/
      for(int i = 0; i < beats.size(); ++i)
      {
-         if(beats[i] == to) return true;
+         if(beats[i] == to)
+         {
+             //qDebug("can beat");
+             return true;
+         }
+     }
+     if(col == Color::WHITE && whiteBeat && !beat)
+     {
+         //qDebug("can not white beat");
+         return false;
+     }
+     if(col == Color::BLACK && blackBeat && !beat)
+     {
+         //qDebug("can not black beat");
+         return false;
      }
      for(int i = 0; i < moves.size(); ++i)
      {
-         if(moves[i] == to) return true;
+         if(moves[i] == to)
+         {
+             //qDebug("can move");
+             return true;
+         }
      }
+     /*qDebug("else");
+     qDebug("end move to");*/
      return false;
  }

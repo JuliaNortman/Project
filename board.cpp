@@ -112,30 +112,48 @@ void Board::isClicked(int i)
     ui->debug->append(QString::number(i)+'\n');
     prevActive = active;
     active = i;
+    /*qDebug("Active: PrevActive: ");
+    qDebug(std::to_string(active).c_str());
+    qDebug(std::to_string(prevActive).c_str());*/
     //if player`s figure was chosen and it was either first move or previous chosen field was empty
     //mark chosen field and all possible moves
-    if((prevActive==-1 || !fields[prevActive].getFigure()) && fields[active].getFigure() && player == fields[active].getFigure()->getColor())
+    if((prevActive==-1 || !fields[prevActive].getFigure()) && fields[active].getFigure()
+            && player == fields[active].getFigure()->getColor())
     {
+        //ui->debug->append("Mark field1");
         markField(active);
     }
     //if players figure was chosen and previous chosen field contained opponents figure
     //mark chosen field and all possible moves
     else if(fields[prevActive].getFigure()&&fields[prevActive].getFigure()->getColor() != player &&fields[active].getFigure() && player == fields[active].getFigure()->getColor())
     {
+        //ui->debug->append("Mark field2");
         markField(active);
     }
     //if previous figure was player`s figure
     else if(fields[prevActive].getFigure()&&fields[prevActive].getFigure()->getColor() == player)
     {
+        //ui->debug->append("Delete mark1");
         deleteMark(prevActive);
         //if chosen field is black and empty
-        if(!fields[active].getFigure() && isBlackField(active) && fields[prevActive].canMoveTo(active) && canMove(active))
+        /*if(fields[prevActive].canMoveTo(active, whiteBeat, blackBeat, currentPlayer->getColor()))
         {
+            ui->debug->append("true");
+        }
+        else
+        {
+            ui->debug->append("false");
+        }*/
+        if(!fields[active].getFigure() && isBlackField(active) &&
+                fields[prevActive].canMoveTo(active, whiteBeat, blackBeat, currentPlayer->getColor()) && canMove(active))
+        {
+            ui->debug->append("move");
             //move
             move(prevActive, active);
         }
         if(fields[active].getFigure() && fields[active].getFigure()->getColor() == player)
         {
+           // ui->debug->append("Mark field3");
             markField(active);
         }
     }
@@ -319,7 +337,7 @@ void Board::markField(int i)
     //mark all fields that this figure can beat
     if(!fields[i].beats.empty())
     {
-        qDebug("first if");
+        //qDebug("first if");
         for(int j = 0; j < fields[i].beats.size(); ++j)
         {
             fields[fields[i].beats[j]].markField();
@@ -328,25 +346,27 @@ void Board::markField(int i)
     }
 
     //do nothing if player needs to beat but this figure cannot beat
-    if(whiteBeat) qDebug("whiteBeat");
-    if(fields[i].getColor() == Color::WHITE) qDebug("WHITE");
-    if(blackBeat) qDebug("blackBeat");
-    if(fields[i].getColor() == Color::BLACK) qDebug("BLACK");
+    //if(whiteBeat) qDebug("whiteBeat");
+    //if(fields[i].getFigure()->getColor() == Color::WHITE) qDebug("WHITE");
+    //if(blackBeat) qDebug("blackBeat");
+    //if(fields[i].getFigure()->getColor() == Color::BLACK) qDebug("BLACK");
     if(whiteBeat && fields[i].getFigure()->getColor() == Color::WHITE)
     {
-        qDebug("second if");
+        //qDebug("second if");
+        fields[i].moves.clear();
         return;
     }
     if(blackBeat && fields[i].getFigure()->getColor() == Color::BLACK)
     {
-        qDebug("third if");
+        //qDebug("third if");
+        fields[i].moves.clear();
         return;
     }
 
     //mark all fields where figure can move
     for(int j = 0; j < fields[i].moves.size(); ++j)
     {
-        qDebug("fourth if");
+        //qDebug("fourth if");
         fields[fields[i].moves[j]].markField();
     }
 }
@@ -355,6 +375,7 @@ void Board::deleteMark(int i)
 {
     fields[i].unmarkField();
 
+
     //unmark all fields that this figure can beat
     if(!fields[i].beats.empty())
     {
@@ -362,11 +383,10 @@ void Board::deleteMark(int i)
         {
             fields[fields[i].beats[j]].unmarkField();
         }
-        return;
     }
 
     //do nothing if player needs to beat but this figure cannot beat
-    if((whiteBeat && fields[i].getColor() == Color::WHITE) || (blackBeat&&fields[i].getColor()==Color::BLACK)) return;
+    if((whiteBeat && fields[i].getFigure()->getColor() == Color::WHITE) || (blackBeat&&fields[i].getFigure()->getColor()==Color::BLACK)) return;
 
     //unmark all fields where figure can move
     for(int j = 0; j < fields[i].moves.size(); ++j)
@@ -377,7 +397,7 @@ void Board::deleteMark(int i)
 
 void Board::correctBoard()
 {
-    qDebug("start correct");
+    //qDebug("start correct");
     whiteBeat = blackBeat = false;
     //qDebug("before white move clear");
     whiteMove.clear();
@@ -423,7 +443,7 @@ void Board::correctBoard()
     //qDebug("after active");
     for(int i = 0; i < SIZE; ++i)
     {
-        qDebug(std::to_string(i).c_str());
+        //qDebug(std::to_string(i).c_str());
         fields[i].setBeat(false);
         fields[i].beats.clear();
         fields[i].moves.clear();

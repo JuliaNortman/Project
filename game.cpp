@@ -25,29 +25,29 @@ bool Game::endOfGame()
 
 void Game::play(Player* currentPlayer)
 {
-    qDebug("Slot");
+    //qDebug("Slot");
     if(endOfGame()) return;
     if(!currentPlayer->getCanMove())
     {
-        qDebug("end of current player moves");
+        //qDebug("end of current player moves");
         if(currentPlayer == player1)
         {
             board->setCurrentPlayer(player2);
             currentPlayer = player2;
-            qDebug("player2");
-            if(player2->getColor() == Color::BLACK) qDebug("black player");
-            else qDebug("white player");
+            //qDebug("player2");
+            //if(player2->getColor() == Color::BLACK) qDebug("black player");
+            //else qDebug("white player");
         }
         else
         {
              board->setCurrentPlayer(player1);
              currentPlayer = player1;
-             qDebug("player1");
+             //qDebug("player1");
         }
         currentPlayer->setCanMove(true);
     }
     board->setCurrentPlayer(currentPlayer);
-    if(currentPlayer->getColor() == Color::BLACK) qDebug("black current player");
-    else qDebug("white current player");
+    //if(currentPlayer->getColor() == Color::BLACK) qDebug("black current player");
+   // else if(currentPlayer->getColor() == Color::WHITE) qDebug("white current player");
     currentPlayer->move();
 }
