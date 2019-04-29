@@ -6,6 +6,12 @@
 
 class Board;
 
+struct Move
+{
+    int from;
+    int to;
+};
+
 class Player :public QObject
 {
     Q_OBJECT
@@ -40,7 +46,9 @@ public:
     void move() override;
     void setBoardActive();
     void setBoardUnactive();
-    void think(int&, int&);/*AI*/
+    void easythink(int&, int&);/*AI*/
+    Move hardThink();
+    int minimax(Board* board, int depth, bool maximizer);
     bool isBot()override {return  true;}
 };
 

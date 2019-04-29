@@ -1,4 +1,17 @@
 #include "player.h"
+#include <stdlib.h>
+
+int max(int a, int b)
+{
+    if(a >= b) return a;
+    return b;
+}
+
+int min(int a, int b)
+{
+    if(a <= b) return a;
+    return b;
+}
 
 Player::Player(Color c)
     :color(c)
@@ -40,7 +53,7 @@ void Person::move()
     qDebug("Person move end");
 }
 
-void Bot::think(int& from, int& to)
+void Bot::easythink(int& from, int& to)
 {
     srand(static_cast<unsigned int>(time(nullptr)));
     QVector<int> beat, move;
@@ -102,6 +115,138 @@ void Bot::think(int& from, int& to)
     qDebug(std::to_string(to).c_str());*/
 }
 
+int Bot::minimax(Board *board, int depth, bool maximizer)
+{
+    int score = board->evaluateBoard(color);
+    if(depth == DEPTH) return score;
+    if(board->getWhiteNumber() == 0 || board->getBlackNumber() == 0) return score;
+    if(board->getWhiteBeat().empty() && board->getWhiteMove().empty() && maximizer && color == Color::WHITE) return score;
+    if(board->getBlackBeat().empty() && board->getBlackMove().empty() && maximizer && color == Color::BLACK) return score;
+    if(board->getWhiteBeat().empty() && board->getWhiteMove().empty() && !maximizer && color == Color::BLACK) return score;
+    if(board->getBlackBeat().empty() && board->getBlackMove().empty() && !maximizer && color == Color::WHITE) return score;
+
+    if(maximizer)
+    {
+        int best = INT_MIN;
+        QVector<int> fromMoves, toMoves;
+        if(color == Color::BLACK)
+        {
+            fromMoves = board->getBlackBeat();
+            if(fromMoves.empty()) fromMoves = board->getBlackMove();
+        }
+        else
+        {
+            fromMoves = board->getWhiteBeat();
+            if(fromMoves.empty()) fromMoves = board->getWhiteMove();
+        }
+        int from = -1, to = -1;
+        for (int i = 0; i < fromMoves.size(); ++i)
+        {
+            from = fromMoves[i];
+            toMoves = board->getFieldBeats(from);
+            if(toMoves.empty()) toMoves = board->getFieldsMoves(from);
+            for(int j = 0; j < toMoves.size(); ++j)
+            {
+                to = toMoves[j];
+                bool king = false;
+                int beatfield = board->fieldToBeat(from, to);
+                if(beatfield != -1) king = board->getField(beatfield).getFigure()->isKing();
+
+                board->move(from, to);
+                best = max(best, minimax(board, depth+1, !maximizer));
+                if(king) board->undoMove(from, to, king);
+                else board->undoMove(from, to);
+                board->correctBoard();
+
+            }
+        }
+        return best;
+    }
+    else
+    {
+        int best = INT_MAX;
+        QVector<int> fromMoves, toMoves;
+        if(color == Color::WHITE)
+        {
+            fromMoves = board->getBlackBeat();
+            if(fromMoves.empty()) fromMoves = board->getBlackMove();
+        }
+        else
+        {
+            fromMoves = board->getWhiteBeat();
+            if(fromMoves.empty()) fromMoves = board->getWhiteMove();
+        }
+        int from = -1, to = -1;
+        for (int i = 0; i < fromMoves.size(); ++i)
+        {
+            from = fromMoves[i];
+            toMoves = board->getFieldBeats(from);
+            if(toMoves.empty()) toMoves = board->getFieldsMoves(from);
+            for(int j = 0; j < toMoves.size(); ++j)
+            {
+                to = toMoves[j];
+                bool king = false;
+                int beatfield = board->fieldToBeat(from, to);
+                if(beatfield != -1) king = board->getField(beatfield).getFigure()->isKing();
+
+                board->move(from, to);
+                best = min(best, minimax(board, depth+1, !maximizer));
+                if(king) board->undoMove(from, to, king);
+                else board->undoMove(from, to);
+                board->correctBoard();
+
+            }
+        }
+        return best;
+    }
+}
+
+Move Bot::hardThink()
+{
+    int bestVal = INT_MIN;
+    int from = -1, to = -1;
+    Move bestMove;
+    bestMove.from = bestMove.to = -1;
+    QVector<int> fromMoves, toMoves;
+    if(color == Color::BLACK)
+    {
+        fromMoves = board->getBlackBeat();
+        if(fromMoves.empty()) fromMoves = board->getBlackMove();
+    }
+    else
+    {
+        fromMoves = board->getWhiteBeat();
+        if(fromMoves.empty()) fromMoves = board->getWhiteMove();
+    }
+    for (int i = 0; i < fromMoves.size(); ++i)
+    {
+        from = fromMoves[i];
+        toMoves = board->getFieldBeats(from);
+        if(toMoves.empty()) toMoves = board->getFieldsMoves(from);
+        for(int j = 0; j < toMoves.size(); ++j)
+        {
+            to = toMoves[j];
+            bool king = false;
+            int beatfield = board->fieldToBeat(from, to);
+            if(beatfield != -1) king = board->getField(beatfield).getFigure()->isKing();
+
+            board->move(from, to);
+            int moveVal = minimax(board, 0, true);
+            if(king) board->undoMove(from, to, king);
+            else board->undoMove(from, to);
+            board->correctBoard();
+
+            if(moveVal > bestVal)
+            {
+                bestMove.from = from;
+                bestMove.to = to;
+                bestVal = moveVal;
+            }
+        }
+    }
+    return bestMove;
+}
+
 void Bot::move()
 {
     qDebug("before bot move");
@@ -115,7 +260,9 @@ void Bot::move()
         }
         //qDebug("while");
         int from = -1, to = -1;
-        think(from, to);
+        Move move = hardThink();
+        from = move.from;
+        to = move.to;
         if(from != -1 && to != -1)
         {
             //qDebug("real bot move");

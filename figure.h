@@ -13,6 +13,7 @@ public:
     bool isKing(){return king;}
     Color getColor(){return color;}
     void becomeKing() {king = true;}
+    void removeKing() {king = false;}
     bool getBeat(){return hadBeat;}\
     void setBeat(bool beat){hadBeat = beat;}
 

@@ -35,7 +35,8 @@ public:
         //bool canMove(int);
         //void analyseKingField(bool&, int, QVector<int>&); //function that is used in analyseField for kings
         //void analyseSimpleField(bool&, int, int, QVector<int>&);
-        void move(int, int);
+        void move(int from, int to);
+        void undoMove(int from, int to, bool king = false);
 
         //finds all fields where the figure from field i can move
         QVector<int> neighborFieldsToMove(int);
@@ -47,6 +48,7 @@ public:
         void setCurrentPlayer(Player* pl){currentPlayer = pl;}/*sets current player who is active at the moment*/
         bool gameEnd(Color color);/*returns true if the game is over*/
         int evaluateBoard(Color maximizer);/*evaluation of the current board state*/
+        field getField(int i){return fields[i];}
 
         QVector<int> getWhiteMove(){return whiteMove;}
         QVector<int> getBlackMove(){return blackMove;}
@@ -54,12 +56,17 @@ public:
         QVector<int> getBlackBeat(){return blackBeats;}
         QVector<int> getFieldBeats(int i){return fields[i].beats;}
         QVector<int> getFieldsMoves(int i){return fields[i].moves;}
+        int getWhiteNumber(){return white;}
+        int getBlackNumber(){return black;}
         /*sets from and to field after bot move*/
         void setActivePrevactive(int from, int to)
         {
             active = to;
             prevActive = from;
         }
+        /*returns the field which figure will beat if it is a beat move
+          while it moves 'from' 'to'*/
+        int fieldToBeat(int from, int to);
 
     protected:
 

@@ -1,6 +1,7 @@
 #include "board.h"
 #include "ui_board.h"
 #include <cmath>
+#include <cstdlib>
 #include <iostream>
 #include <string>
 #include <QRandomGenerator>
@@ -531,6 +532,16 @@ void Board::correctBoard()
     //qDebug("End correct");
 }
 
+int Board::fieldToBeat(int from, int to)
+{
+    int beat = -1;
+    if(to-from == -(2*static_cast<int>(sqrt(SIZE))+2)) beat = from-static_cast<int>(sqrt(SIZE))-1;
+    else if(to-from == -(2*static_cast<int>(sqrt(SIZE))-2)) beat = from-static_cast<int>(sqrt(SIZE))+1;
+    else if(to-from == 2*static_cast<int>(sqrt(SIZE))-2) beat = from+static_cast<int>(sqrt(SIZE))-1;
+    else if(to-from == 2*static_cast<int>(sqrt(SIZE))+2) beat = from+static_cast<int>(sqrt(SIZE))+1;
+    return beat;
+}
+
 void Board::move(int from, int to)
 {
     //qDebug("start move");
@@ -539,22 +550,18 @@ void Board::move(int from, int to)
     {
         //qDebug("must beat");
         fields[from].getFigure()->setBeat(true);
-        int beatField = 0;
         //calculate what field must be beaten
-        if(to-from == -(2*static_cast<int>(sqrt(SIZE))+2)) beatField = from-static_cast<int>(sqrt(SIZE))-1;
-        else if(to-from == -(2*static_cast<int>(sqrt(SIZE))-2)) beatField = from-static_cast<int>(sqrt(SIZE))+1;
-        else if(to-from == 2*static_cast<int>(sqrt(SIZE))-2) beatField = from+static_cast<int>(sqrt(SIZE))-1;
-        else if(to-from == 2*static_cast<int>(sqrt(SIZE))+2) beatField = from+static_cast<int>(sqrt(SIZE))+1;
+        int beatField = fieldToBeat(from, to);
         //decrease number of figures
         if(fields[beatField].getFigure()->getColor() == Color::BLACK)
         {
             black--;
-            ui->blackNuber->setText(std::to_string(black).c_str());
+            ui->blackNuber->setText("Black: "+QString::number(black));
         }
         else
         {
             white--;
-            ui->whiteNumber->setText(std::to_string(white).c_str());
+            ui->whiteNumber->setText("White: "+QString::number(white));
         }
 
         delete fields[beatField].getFigure();
@@ -586,6 +593,51 @@ void Board::move(int from, int to)
     correctBoard();
     /*emit signal to inform that another player can move*/
     emit(moved(currentPlayer));
+}
+
+void Board::undoMove(int from, int to, bool king)
+{
+    int beatField = fieldToBeat(from, to);
+    if(beatField != -1)
+    {
+        Figure *figure = nullptr;
+        if(fields[to].getFigure()->getColor() == Color::BLACK)
+        {
+            black++;
+            ui->blackNuber->setText("Black: "+QString::number(black));
+            figure = new Figure(Color::BLACK);
+        }
+        else
+        {
+            white++;
+            ui->whiteNumber->setText("White: "+QString::number(white));
+            figure = new Figure(Color::WHITE);
+        }
+        figure->setKing(king);
+        fields[beatField].setFigure(figure);
+        fields[beatField].setPicture();
+        fields[from].getFigure()->setBeat(false);
+    }
+    else {
+        fields[from].getFigure()->setBeat(false);
+    }
+    /*set figure to be a king if it reached the line*/
+    if(fields[to].getFigure() && ((fields[to].getFigure()->getColor() == Color::BLACK && to/static_cast<int>(sqrt(SIZE)) == static_cast<int>(sqrt(SIZE))-1)
+            ||(fields[to].getFigure()->getColor() == Color::WHITE && to/static_cast<int>(sqrt(SIZE)) == 0)))
+    {
+        //qDebug("becomes king");
+        fields[to].getFigure()->removeKing();
+    }
+    fields[from].setFigure(fields[to].getFigure());
+    //qDebug("remove figure");
+    fields[to].setFigure(nullptr);
+
+    //qDebug("set picture from");
+    fields[from].setPicture();
+    //qDebug("set picture to");
+    fields[to].setPicture();
+    //qDebug("end Move");
+    correctBoard();
 }
 
 /*
@@ -1024,7 +1076,7 @@ int Board::evaluateBoard(Color maximizer)
         }
     }
     /*there are no possible moves*/
-    if(maximizer == Color::WHITE && whiteMove.empty() && whiteBeats.empty())
+    if(maximizer == Color::WHITE && whiteMove.empty() && whiteBeats.empty() && currentPlayer->getColor()==maximizer)
     {
         score += -100;
     }
@@ -1036,7 +1088,7 @@ int Board::evaluateBoard(Color maximizer)
     {
         score += 100;
     }
-    else if(maximizer == Color::BLACK && blackMove.empty() && blackBeats.empty())
+    else if(maximizer == Color::BLACK && blackMove.empty() && blackBeats.empty() && currentPlayer->getColor()==maximizer)
     {
         score += -100;
     }
