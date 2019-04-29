@@ -31,6 +31,7 @@ public:
     {
         if (start->objectName().isEmpty())
             start->setObjectName(QString::fromUtf8("start"));
+        start->setEnabled(true);
         start->resize(650, 650);
         QPalette palette;
         QBrush brush(QColor(255, 255, 255, 255));

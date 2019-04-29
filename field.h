@@ -6,7 +6,6 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QVector>
-#include "mainwindow.h"
 #include "constants.h"
 #include "figure.h"
 
@@ -28,13 +27,14 @@ protected:
     void mousePressEvent(QMouseEvent* event);
 };
 
-class field : public MainWindow
+class field : public QMainWindow
 {
     Q_OBJECT
 public:
     field() = default;
     field(Color fColor, int coord); //constructor
     field(const field&); //copy constructor
+    field& operator= (const field&);
     ~field();
 
     void setFigure(Figure*);
@@ -55,7 +55,7 @@ public:
     void markField();
     void unmarkField(); //make the field as unchosen
     void addMove(int);
-    bool canMoveTo(int, bool, bool, Color);
+    bool canMoveTo(int);
 
     QVector<int> moves; //all possible moves from this field
     QVector<int> beats; //all fields that the figure on this field needs to beat

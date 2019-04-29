@@ -12,14 +12,12 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QGridLayout>
-#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QToolBar>
-#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -28,17 +26,6 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralWidget;
-    QWidget *gridLayoutWidget;
-    QGridLayout *checkerBoard;
-    QVBoxLayout *verticalLayout;
-    QHBoxLayout *layout1;
-    QHBoxLayout *layout2;
-    QHBoxLayout *layout3;
-    QHBoxLayout *layout4;
-    QHBoxLayout *layout5;
-    QHBoxLayout *layout6;
-    QHBoxLayout *layout7;
-    QHBoxLayout *layout8;
     QLabel *whiteNumber;
     QLabel *blackNuber;
     QWidget *gridLayoutWidget_2;
@@ -72,68 +59,6 @@ public:
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         centralWidget->setLayoutDirection(Qt::LeftToRight);
-        gridLayoutWidget = new QWidget(centralWidget);
-        gridLayoutWidget->setObjectName(QString::fromUtf8("gridLayoutWidget"));
-        gridLayoutWidget->setGeometry(QRect(10, 520, 161, 71));
-        checkerBoard = new QGridLayout(gridLayoutWidget);
-        checkerBoard->setSpacing(0);
-        checkerBoard->setContentsMargins(11, 11, 11, 11);
-        checkerBoard->setObjectName(QString::fromUtf8("checkerBoard"));
-        checkerBoard->setContentsMargins(0, 0, 0, 0);
-        verticalLayout = new QVBoxLayout();
-        verticalLayout->setSpacing(0);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        layout1 = new QHBoxLayout();
-        layout1->setSpacing(0);
-        layout1->setObjectName(QString::fromUtf8("layout1"));
-
-        verticalLayout->addLayout(layout1);
-
-        layout2 = new QHBoxLayout();
-        layout2->setSpacing(0);
-        layout2->setObjectName(QString::fromUtf8("layout2"));
-
-        verticalLayout->addLayout(layout2);
-
-        layout3 = new QHBoxLayout();
-        layout3->setSpacing(0);
-        layout3->setObjectName(QString::fromUtf8("layout3"));
-
-        verticalLayout->addLayout(layout3);
-
-        layout4 = new QHBoxLayout();
-        layout4->setSpacing(0);
-        layout4->setObjectName(QString::fromUtf8("layout4"));
-
-        verticalLayout->addLayout(layout4);
-
-        layout5 = new QHBoxLayout();
-        layout5->setSpacing(0);
-        layout5->setObjectName(QString::fromUtf8("layout5"));
-
-        verticalLayout->addLayout(layout5);
-
-        layout6 = new QHBoxLayout();
-        layout6->setSpacing(0);
-        layout6->setObjectName(QString::fromUtf8("layout6"));
-
-        verticalLayout->addLayout(layout6);
-
-        layout7 = new QHBoxLayout();
-        layout7->setSpacing(0);
-        layout7->setObjectName(QString::fromUtf8("layout7"));
-
-        verticalLayout->addLayout(layout7);
-
-        layout8 = new QHBoxLayout();
-        layout8->setSpacing(0);
-        layout8->setObjectName(QString::fromUtf8("layout8"));
-
-        verticalLayout->addLayout(layout8);
-
-
-        checkerBoard->addLayout(verticalLayout, 0, 0, 1, 1);
-
         whiteNumber = new QLabel(centralWidget);
         whiteNumber->setObjectName(QString::fromUtf8("whiteNumber"));
         whiteNumber->setGeometry(QRect(40, 20, 81, 41));

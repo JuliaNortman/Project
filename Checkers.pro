@@ -26,28 +26,25 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp \
-    board.cpp \
     field.cpp \
     start.cpp \
     figure.cpp \
     player.cpp \
     game.cpp \
-    settings.cpp
+    settings.cpp \
+    board.cpp
 
 HEADERS += \
-        mainwindow.h \
-    board.h \
     field.h \
     start.h \
     constants.h \
     figure.h \
     player.h \
     game.h \
-    settings.h
+    settings.h \
+    board.h
 
 FORMS += \
-    mainwindow.ui \
     start.ui \
     settings.ui \
     board.ui

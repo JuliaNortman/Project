@@ -1,5 +1,5 @@
-#include "ui_mainwindow.h"
 #include "board.h"
+#include "ui_board.h"
 #include <cmath>
 #include <iostream>
 #include <string>
@@ -12,10 +12,15 @@
 #include <QHBoxLayout>
 #include "constants.h"
 
-Board::Board(Player* plyr)
-    :currentPlayer(plyr)
+Board::Board(Player* plyr, QWidget *parent) :
+    QDialog(parent),
+    currentPlayer(plyr),
+    ui(new Ui::Board)
 {
+    ui->setupUi(this);
     this->player = currentPlayer->getColor();
+    //if(player == Color::WHITE) qDebug("WHITE");
+    //else if(player == Color::BLACK) qDebug("BLACK");
     fields = new field[SIZE];
     whiteBeat = blackBeat = false;
     active = prevActive = -1;
@@ -27,16 +32,16 @@ Board::Board(Player* plyr)
         QHBoxLayout *layout = nullptr;
         for(int i = 0; i < SIZE; ++i)
         {
-            if(i%8 == 0)
+            if(i%static_cast<int>(sqrt(SIZE)) == 0)
             {
-               layout  = new QHBoxLayout;
+                layout  = new QHBoxLayout;
             }
             fields[i].setCoordinate(i);
             fields[i].getCheckerbutton()->indexChange(i);
             layout->addWidget(fields[i].getCheckerbutton());
-            if((i+1)%8 == 0)
+            if((i+1)%static_cast<int>(sqrt(SIZE)) == 0)
             {
-                ui->gridChBoard->addLayout(layout, i/8, 0);
+              ui->gridChBoard->addLayout(layout, i/static_cast<int>(sqrt(SIZE)), 0);
             }
             modelBoard(i);
             connect(fields[i].getCheckerbutton(), SIGNAL(clicked(int)), this, SLOT(isClicked(int)));
@@ -47,16 +52,16 @@ Board::Board(Player* plyr)
         QHBoxLayout *layout = nullptr;
         for(int i = SIZE-1; i >= 0; --i)
         {
-            if((i+1)%8 == 0)
+            if((i+1)%static_cast<int>(sqrt(SIZE)) == 0)
             {
                layout  = new QHBoxLayout;
             }
             fields[i].setCoordinate(i);
             fields[i].getCheckerbutton()->indexChange(i);
             layout->addWidget(fields[i].getCheckerbutton());
-            if(i%8 == 0)
+            if(i%static_cast<int>(sqrt(SIZE)) == 0)
             {
-                ui->gridChBoard->addLayout(layout, (SIZE-i-1)/8, 0);
+                ui->gridChBoard->addLayout(layout, (SIZE-i-1)/static_cast<int>(sqrt(SIZE)), 0);
             }
             modelBoard(i);
             connect(fields[i].getCheckerbutton(), SIGNAL(clicked(int)), this, SLOT(isClicked(int)));
@@ -65,10 +70,32 @@ Board::Board(Player* plyr)
     correctBoard();
 }
 
+Board::Board(const Board& obj)
+{
+    white = obj.white;
+    black = obj.black;
+    fields = new field[SIZE];
+    for(int i = 0; i < SIZE; ++i)
+    {
+        fields[i] = obj.fields[i];
+    }
+    active = obj.active;
+    prevActive = obj.prevActive;
+    whiteBeat = obj.whiteBeat;
+    blackBeat = obj.blackBeat;
+    whiteMove = obj.whiteMove;
+    blackMove = obj.blackMove;
+    whiteBeats = obj.whiteBeats;
+    blackBeats = obj.blackBeats;
+    player = obj.player;
+    isActive = obj.isActive;
+    currentPlayer = obj.currentPlayer;
+}
+
 //check if field is black
 bool Board::isBlackField(int i)
 {
-    if((i%2 + i/8)%2 == 0) return false;
+    if((i%2 + i/static_cast<int>(sqrt(SIZE)))%2 == 0) return false;
     return true;
 }
 
@@ -78,13 +105,13 @@ void Board::modelBoard(int i)
      if(isBlackField(i))
      {
          fields[i].setColor((Color::BLACK)); //field is black
-         if(i <= 23)
+         if(i < static_cast<int>(sqrt(SIZE))*3)
          {
              //black figures
              Figure* figure = new Figure(Color::BLACK);
              fields[i].setFigure(figure);
          }
-         else if(i >= 40)
+         else if(i >= SIZE-static_cast<int>(sqrt(SIZE))*3)
          {
              //white figures
              Figure* figure = new Figure(Color::WHITE);
@@ -94,18 +121,6 @@ void Board::modelBoard(int i)
      fields[i].setPicture();
 }
 
-bool Board::canMove(int i)
-{
-    if(fields[i].getColor() == Color::BLACK)
-    {
-
-    }
-    else
-    {
-
-    }
-    return true;
-}
 
 void Board::isClicked(int i)
 {
@@ -144,11 +159,12 @@ void Board::isClicked(int i)
         {
             ui->debug->append("false");
         }*/
-        if(!fields[active].getFigure() && isBlackField(active) &&
-                fields[prevActive].canMoveTo(active, whiteBeat, blackBeat, currentPlayer->getColor()) && canMove(active))
+        if(!fields[active].getFigure() && isBlackField(active) && fields[prevActive].canMoveTo(active))
         {
             //move
-            qDebug("move");
+            /*qDebug("move");
+            qDebug(std::to_string(prevActive).c_str());
+            qDebug(std::to_string(active).c_str());*/
             move(prevActive, active);
         }
         if(fields[active].getFigure() && fields[active].getFigure()->getColor() == player)
@@ -247,29 +263,33 @@ QVector<int> Board::neighborFieldsToMove(int i)
     QVector<int> result;
     //if target field is black and free of figures and target field index is on the checker board and
     //figure on given field is either king(can move in all directions or have certain color)
-    if(i-9 >= 0 && isBlackField(i-9) && !fields[i-9].getFigure()
+    if(i-static_cast<int>(sqrt(SIZE))-1 >= 0 && isBlackField(i-static_cast<int>(sqrt(SIZE))-1)
+            && !fields[i-static_cast<int>(sqrt(SIZE))-1].getFigure()
             &&(fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::WHITE))
     {
         //qDebug("i-9");
-        result.push_back(i-9);
+        result.push_back(i-static_cast<int>(sqrt(SIZE))-1);
     }
-    if(i+9 < SIZE && isBlackField(i+9) && !fields[i+9].getFigure()
+    if(i+static_cast<int>(sqrt(SIZE))+1 < SIZE && isBlackField(i+static_cast<int>(sqrt(SIZE))+1)
+            && !fields[i+static_cast<int>(sqrt(SIZE))+1].getFigure()
             &&(fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::BLACK))
     {
         //qDebug("i+9");
-        result.push_back(i+9);
+        result.push_back(i+static_cast<int>(sqrt(SIZE))+1);
     }
-    if(i-7 >= 0 && isBlackField(i-7) && !fields[i-7].getFigure()
+    if(i-static_cast<int>(sqrt(SIZE))+1 >= 0 && isBlackField(i-static_cast<int>(sqrt(SIZE))+1)
+            && !fields[i-static_cast<int>(sqrt(SIZE))+1].getFigure()
             &&(fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::WHITE))
     {
         //qDebug("i-7");
-        result.push_back(i-7);
+        result.push_back(i-static_cast<int>(sqrt(SIZE))+1);
     }
-    if(i+7 < SIZE && isBlackField(i+7) && !fields[i+7].getFigure()
+    if(i+static_cast<int>(sqrt(SIZE))-1 < SIZE && isBlackField(i+static_cast<int>(sqrt(SIZE))-1)
+            && !fields[i+static_cast<int>(sqrt(SIZE))-1].getFigure()
             &&(fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::BLACK))
     {
         //qDebug("i+7");
-        result.push_back(i+7);
+        result.push_back(i+static_cast<int>(sqrt(SIZE))-1);
     }
     //qDebug("result size");
     //qDebug(std::to_string(result.size()).c_str());
@@ -284,37 +304,41 @@ QVector<int> Board::neighborFieldsToBeat(int i)
     //and target field is black and target field is free from other figures and
     //via field has figure which color differs from given field figure
     //and given figure is either king or can move in that diection
-    if(i-9>=0 && i-18>=0 && isBlackField(i-18) && !fields[i-18].getFigure()
-            && fields[i-9].getFigure()
-            && fields[i].getFigure()->getColor() != fields[i-9].getFigure()->getColor()
+    if(i-static_cast<int>(sqrt(SIZE))-1>=0 && i-2*static_cast<int>(sqrt(SIZE))-2>=0
+            && isBlackField(i-static_cast<int>(sqrt(SIZE))*2-2) && !fields[i-2*static_cast<int>(sqrt(SIZE))-2].getFigure()
+            && fields[i-static_cast<int>(sqrt(SIZE))-1].getFigure()
+            && fields[i].getFigure()->getColor() != fields[i-static_cast<int>(sqrt(SIZE))-1].getFigure()->getColor()
             && (fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::WHITE))
     {
         //qDebug("i-18");
-        result.push_back(i-18);
+        result.push_back(i-2*static_cast<int>(sqrt(SIZE))-2);
     }
-    if(i-7>=0 && i-14>=0 && isBlackField(i-14) && !fields[i-14].getFigure()
-            && fields[i-7].getFigure()
-            && fields[i].getFigure()->getColor() != fields[i-7].getFigure()->getColor()
+    if(i-static_cast<int>(sqrt(SIZE))+1>=0 && i-2*static_cast<int>(sqrt(SIZE))+2>=0
+            && isBlackField(i-2*static_cast<int>(sqrt(SIZE))+2) && !fields[i-static_cast<int>(sqrt(SIZE))*2+2].getFigure()
+            && fields[i-static_cast<int>(sqrt(SIZE))+1].getFigure()
+            && fields[i].getFigure()->getColor() != fields[i-static_cast<int>(sqrt(SIZE))+1].getFigure()->getColor()
             && (fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::WHITE))
     {
         //qDebug("i-14");
-        result.push_back(i-14);
+        result.push_back(i-static_cast<int>(sqrt(SIZE))*2+2);
     }
-    if(i+9<SIZE && i+18<SIZE && isBlackField(i+18) && !fields[i+18].getFigure()
-            && fields[i+9].getFigure()
-            && fields[i].getFigure()->getColor() != fields[i+9].getFigure()->getColor()
+    if(i+static_cast<int>(sqrt(SIZE))+1<SIZE && i+2*static_cast<int>(sqrt(SIZE))+2<SIZE
+            && isBlackField(i+2*static_cast<int>(sqrt(SIZE))+2) && !fields[i+2*static_cast<int>(sqrt(SIZE))+2].getFigure()
+            && fields[i+static_cast<int>(sqrt(SIZE))+1].getFigure()
+            && fields[i].getFigure()->getColor() != fields[i+static_cast<int>(sqrt(SIZE))+1].getFigure()->getColor()
             && (fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::BLACK))
     {
         //qDebug("i+18");
-        result.push_back(i+18);
+        result.push_back(i+2*static_cast<int>(sqrt(SIZE))+2);
     }
-    if(i+7<SIZE && i+14<SIZE && isBlackField(i+14) && !fields[i+14].getFigure()
-            && fields[i+7].getFigure()
-            && fields[i].getFigure()->getColor() != fields[i+7].getFigure()->getColor()
+    if(i+static_cast<int>(sqrt(SIZE))-1<SIZE && i+2*static_cast<int>(sqrt(SIZE))-2<SIZE
+            && isBlackField(i+2*static_cast<int>(sqrt(SIZE))-2) && !fields[i+2*static_cast<int>(sqrt(SIZE))-2].getFigure()
+            && fields[i+static_cast<int>(sqrt(SIZE))-1].getFigure()
+            && fields[i].getFigure()->getColor() != fields[i+static_cast<int>(sqrt(SIZE))-1].getFigure()->getColor()
             && (fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::BLACK))
     {
         //qDebug("i+14");
-        result.push_back(i+14);
+        result.push_back(i+2*static_cast<int>(sqrt(SIZE))-2);
     }
     return result;
 }
@@ -517,10 +541,10 @@ void Board::move(int from, int to)
         fields[from].getFigure()->setBeat(true);
         int beatField = 0;
         //calculate what field must be beaten
-        if(to-from == -18) beatField = from-9;
-        else if(to-from == -14) beatField = from-7;
-        else if(to-from == 14) beatField = from+7;
-        else if(to-from == 18) beatField = from+9;
+        if(to-from == -(2*static_cast<int>(sqrt(SIZE))+2)) beatField = from-static_cast<int>(sqrt(SIZE))-1;
+        else if(to-from == -(2*static_cast<int>(sqrt(SIZE))-2)) beatField = from-static_cast<int>(sqrt(SIZE))+1;
+        else if(to-from == 2*static_cast<int>(sqrt(SIZE))-2) beatField = from+static_cast<int>(sqrt(SIZE))-1;
+        else if(to-from == 2*static_cast<int>(sqrt(SIZE))+2) beatField = from+static_cast<int>(sqrt(SIZE))+1;
         //decrease number of figures
         if(fields[beatField].getFigure()->getColor() == Color::BLACK)
         {
@@ -548,8 +572,8 @@ void Board::move(int from, int to)
     //qDebug("remove figure");
     fields[from].setFigure(nullptr);
     /*set figure to be a king if it reached the line*/
-    if(fields[to].getFigure() && ((fields[to].getFigure()->getColor() == Color::BLACK && to/8 == 7)
-            ||(fields[to].getFigure()->getColor() == Color::WHITE && to/8 == 0)))
+    if(fields[to].getFigure() && ((fields[to].getFigure()->getColor() == Color::BLACK && to/static_cast<int>(sqrt(SIZE)) == static_cast<int>(sqrt(SIZE))-1)
+            ||(fields[to].getFigure()->getColor() == Color::WHITE && to/static_cast<int>(sqrt(SIZE)) == 0)))
     {
         //qDebug("becomes king");
         fields[to].getFigure()->becomeKing();
@@ -960,8 +984,98 @@ bool Board::gameEnd(Color color)
     return false;
 }
 
+int Board::evaluateBoard(Color maximizer)
+{
+    int score = 0;
+    for(int i = 0; i < SIZE; ++i)
+    {
+        /*evaluating a score based on the field itself*/
+        if(!fields[i].getFigure()) score += 0;
+        else if(fields[i].getFigure()->getColor() == maximizer && fields[i].getFigure()->isKing())
+        {
+            score += 20;
+        }
+        else if(fields[i].getFigure()->getColor() != maximizer && fields[i].getFigure()->isKing())
+        {
+            score += -20;
+        }
+        else if(fields[i].getFigure()->getColor() == maximizer)
+        {
+            score += 10;
+        }
+        else if(fields[i].getFigure()->getColor() != maximizer)
+        {
+            score += -10;
+        }
+        /*evaluating a score based on the figures position*/
+        if(i % static_cast<int>(sqrt(SIZE)) == 0
+                ||i % static_cast<int>(sqrt(SIZE)) == static_cast<int>(sqrt(SIZE))-1
+                || i < static_cast<int>(sqrt(SIZE))
+                || i >= SIZE-static_cast<int>(sqrt(SIZE)))
+        {
+            if(fields[i].getFigure() && fields[i].getFigure()->getColor() == maximizer)
+            {
+                score += 4;
+            }
+            else if(fields[i].getFigure() && fields[i].getFigure()->getColor() != maximizer)
+            {
+                score += -4;
+            }
+        }
+    }
+    /*there are no possible moves*/
+    if(maximizer == Color::WHITE && whiteMove.empty() && whiteBeats.empty())
+    {
+        score += -100;
+    }
+    else if(maximizer == Color::BLACK && whiteMove.empty() && whiteBeats.empty() && currentPlayer->getColor() != maximizer)
+    {
+        score += 100;
+    }
+    else if(maximizer == Color::WHITE && blackMove.empty() && blackBeats.empty() && currentPlayer->getColor()!=maximizer)
+    {
+        score += 100;
+    }
+    else if(maximizer == Color::BLACK && blackMove.empty() && blackBeats.empty())
+    {
+        score += -100;
+    }
+    /*pieces that are threatened by current player*/
+    if(maximizer == Color::BLACK)
+    {
+        int beats = 0;
+        for(int j = 0; j < blackBeats.size(); ++j)
+        {
+            beats += fields[blackBeats[j]].beats.size();
+        }
+        score += 10*beats;
+        beats = 0;
+        for(int j = 0; j < whiteBeats.size(); ++j)
+        {
+            beats += fields[whiteBeats[j]].beats.size();
+        }
+        score += -10*beats;
+    }
+    else
+    {
+        int beats = 0;
+        for(int j = 0; j < whiteBeats.size(); ++j)
+        {
+            beats += fields[whiteBeats[j]].beats.size();
+        }
+        score += 10*beats;
+        beats = 0;
+        for(int j = 0; j < blackBeats.size(); ++j)
+        {
+            beats += fields[blackBeats[j]].beats.size();
+        }
+        score += -10*beats;
+    }
+    ui->debug->append("Evaluation score: " + QString::number(score) + '\n');
+    return score;
+}
+
 Board::~Board()
 {
     delete [] fields;
 }
-

@@ -3,7 +3,6 @@
 #include <QLabel>
 #include <QDebug>
 #include <QMouseEvent>
-#include "ui_mainwindow.h"
 #include "field.h"
 
 
@@ -45,11 +44,22 @@ field::field(const field& obj)
     beat = obj.beat;
     moves = obj.moves;
     beats = obj.beats;
-    figure = new Figure;
-    figure->setKing(obj.figure->isKing());
-    figure->setColor(obj.figure->getColor());
-    checkerbutton = new ClickableLabel;
-    checkerbutton->index = obj.checkerbutton->index;
+    figure = new Figure(obj.figure);
+    checkerbutton = new ClickableLabel(obj.checkerbutton);
+}
+
+field& field::operator=(const field &obj)
+{
+    if(this != &obj)
+    {
+        this->~field();
+        beat = obj.beat;
+        moves = obj.moves;
+        beats = obj.beats;
+        figure = new Figure(obj.figure);
+        checkerbutton = new ClickableLabel(obj.checkerbutton);
+    }
+    return *this;
 }
 
 field::~field()
@@ -130,7 +140,7 @@ Figure* field::removeFigure()
      moves.push_back(i);
  }
 
- bool field::canMoveTo(int to, bool blackBeat, bool whiteBeat, Color col)
+ bool field::canMoveTo(int to)
  {
      //qDebug("start move to");
      /*if(beat) qDebug("beat");
@@ -145,7 +155,7 @@ Figure* field::removeFigure()
              return true;
          }
      }
-     if(col == Color::WHITE && whiteBeat && !beat)
+     /*if(col == Color::WHITE && whiteBeat && !beat)
      {
          //qDebug("can not white beat");
          return false;
@@ -154,7 +164,7 @@ Figure* field::removeFigure()
      {
          //qDebug("can not black beat");
          return false;
-     }
+     }*/
      for(int i = 0; i < moves.size(); ++i)
      {
          if(moves[i] == to)

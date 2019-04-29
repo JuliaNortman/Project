@@ -1,6 +1,5 @@
 #pragma once
 #include "board.h"
-#include "mainwindow.h"
 #include <QWidget>
 #include <QApplication>
 #include <QTime>

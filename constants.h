@@ -1,6 +1,5 @@
 #pragma once
 #include <QString>
-#include "mainwindow.h"
 
 enum class Color
 {

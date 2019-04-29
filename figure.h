@@ -1,7 +1,6 @@
 #pragma once
 #include <QObject>
 #include "constants.h"
-#include "mainwindow.h"
 
 class Figure : public QObject
 {

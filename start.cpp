@@ -12,6 +12,7 @@ start::start(QWidget *parent) :
 {
     ui->setupUi(this);
     int k = 0;
+    k = 9;
     ClickableLabel *lbl = new ClickableLabel;
     ui->startLable->addWidget(lbl);
     QPixmap checkerbuttonPix("Images/start.png");
@@ -31,6 +32,7 @@ void start::startGame(int k)
     b->show();*/
    /* MainWindow *wnd = new MainWindow;
     wnd->show();*/
+    k = 9;
     if(!player1)
     {
         player1 = new Person(Color::WHITE);
@@ -39,7 +41,7 @@ void start::startGame(int k)
     {
         player2 = new Bot(Color::BLACK);
     }
-    if(player1->getColor() == Color::WHITE)game = new Game(player1, player2);
+    if(player1->getColor() == Color::WHITE) game = new Game(player1, player2);
     else game = new Game(player2, player1);
     this->close();
 }

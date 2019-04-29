@@ -2,7 +2,6 @@
 
 #include <QDialog>
 #include "field.h"
-#include "mainwindow.h"
 #include "player.h"
 #include "game.h"
 #include "settings.h"

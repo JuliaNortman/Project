@@ -42,6 +42,7 @@ void Person::move()
 
 void Bot::think(int& from, int& to)
 {
+    srand(static_cast<unsigned int>(time(nullptr)));
     QVector<int> beat, move;
     if(color == Color::WHITE)
     {
@@ -109,7 +110,7 @@ void Bot::move()
     {
         QTime time;
         time.start();
-        for(;time.elapsed() < 1500;) {
+        for(;time.elapsed() < 800;) {
             QApplication::processEvents(nullptr);
         }
         //qDebug("while");
@@ -125,5 +126,5 @@ void Bot::move()
     }
 
     setBoardActive();
-    //qDebug("End bot move");
+    qDebug("End bot move");
 }
