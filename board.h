@@ -35,15 +35,15 @@ public:
         //bool canMove(int);
         //void analyseKingField(bool&, int, QVector<int>&); //function that is used in analyseField for kings
         //void analyseSimpleField(bool&, int, int, QVector<int>&);
-        void move(int from, int to);
-        void undoMove(int from, int to, bool king = false);
+        void move(int from, int to, bool AI = false);
+        void undoMove(int from, int to, bool wasKing, QVector<int> Kings, bool king = false, bool hadBeat = false, bool AI = false);
 
         //finds all fields where the figure from field i can move
         QVector<int> neighborFieldsToMove(int);
         //finds all fields that the figure must beat
         QVector<int> neighborFieldsToBeat(int);
         //sets correct neighbors to the all fields on the board
-        void correctBoard();
+        void correctBoard(bool AI = false);
         void setActivity(bool);
         void setCurrentPlayer(Player* pl){currentPlayer = pl;}/*sets current player who is active at the moment*/
         bool gameEnd(Color color);/*returns true if the game is over*/
@@ -68,6 +68,11 @@ public:
           while it moves 'from' 'to'*/
         int fieldToBeat(int from, int to);
 
+
+        void setText(QString text);
+        QVector<int> getKings();
+        bool isKing(int, QVector<int>);
+
     protected:
 
 
@@ -86,6 +91,9 @@ public:
         bool isActive = true;
 
         Player* currentPlayer = nullptr;/*who is active at present moment*/
+
+
+
 
     public slots:
         void isClicked(int i);

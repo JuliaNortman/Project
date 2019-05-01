@@ -8,7 +8,7 @@ enum class Color
 
 const int SIZE = 64;
 
-const int DEPTH = 1;
+const int DEPTH = 2;
 
 const QString blackField = "Images/blackField.png";
 const QString whiteField = "Images/whiteField.png";

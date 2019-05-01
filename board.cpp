@@ -262,6 +262,7 @@ void Board::isClicked(int i)
 QVector<int> Board::neighborFieldsToMove(int i)
 {
     QVector<int> result;
+    if(!fields[i].getFigure()) return result;
     //if target field is black and free of figures and target field index is on the checker board and
     //figure on given field is either king(can move in all directions or have certain color)
     if(i-static_cast<int>(sqrt(SIZE))-1 >= 0 && isBlackField(i-static_cast<int>(sqrt(SIZE))-1)
@@ -300,7 +301,7 @@ QVector<int> Board::neighborFieldsToMove(int i)
 QVector<int> Board::neighborFieldsToBeat(int i)
 {
     QVector<int> result;
-
+    if(!fields[i].getFigure()) return result;
     //if target field and via field indexes are on the checker board
     //and target field is black and target field is free from other figures and
     //via field has figure which color differs from given field figure
@@ -421,7 +422,7 @@ void Board::deleteMark(int i)
     }
 }
 
-void Board::correctBoard()
+void Board::correctBoard(bool AI)
 {
     //qDebug("start correct");
     whiteBeat = blackBeat = false;
@@ -435,7 +436,13 @@ void Board::correctBoard()
     /*figure need to continue to beat
     *it has possible beat moves and it`s previous move was beat
     */
-    if(!neighborFieldsToBeat(active).empty() && fields[active].getFigure()->getBeat())
+    //qDebug("Active/ prevactive");
+    //qDebug(std::to_string(active).c_str());
+    //qDebug(std::to_string(prevActive).c_str());
+    /*if(active != -1&&!neighborFieldsToBeat(active).empty()) qDebug("not empty");
+    else qDebug("empty");*/
+    /*if(active!=-1&&fields[active].getFigure()->getBeat())qDebug("getBeat");*/
+    if(/*active != -1 &&*/ !neighborFieldsToBeat(active).empty() && fields[active].getFigure()->getBeat())
     {
         //qDebug("Continue beat");
         currentPlayer->setCanMove(true);/*need to move again*/
@@ -516,19 +523,20 @@ void Board::correctBoard()
                     blackMove.push_back(i);
                 }
             }
-            //qDebug("end for loop");
-            //qDebug("Total white/blak beats size");
-            //qDebug(std::to_string(whiteBeats.size()).c_str());
-            //qDebug(std::to_string(blackBeats.size()).c_str());
+            /*qDebug("end for loop");
+            qDebug("Total white/blak beats size");
+            qDebug(std::to_string(whiteBeats.size()).c_str());
+            qDebug(std::to_string(blackBeats.size()).c_str());*/
 
         }
+        fields[i].setPicture();
     }
     if(whiteBeat) whiteMove.clear();
     if(blackBeat) blackMove.clear();
-    if(whiteBeat) qDebug("whiteBeat");
-    if(blackBeat) qDebug("blackBeat");
+    //if(whiteBeat) qDebug("whiteBeat");
+    //if(blackBeat) qDebug("blackBeat");
     //qDebug("before setCanMove");
-    if(currentPlayer)currentPlayer->setCanMove(false);/*it is next player`s turn to move*/
+    /*if(!AI)*/ if(currentPlayer)currentPlayer->setCanMove(false);/*it is next player`s turn to move*/
     //qDebug("End correct");
 }
 
@@ -542,8 +550,10 @@ int Board::fieldToBeat(int from, int to)
     return beat;
 }
 
-void Board::move(int from, int to)
+void Board::move(int from, int to, bool AI)
 {
+    active = to;
+    prevActive = from;
     //qDebug("start move");
     // figure must beat
     if(fields[from].getBeat())
@@ -556,18 +566,18 @@ void Board::move(int from, int to)
         if(fields[beatField].getFigure()->getColor() == Color::BLACK)
         {
             black--;
-            ui->blackNuber->setText("Black: "+QString::number(black));
+            if(!AI)ui->blackNuber->setText("Black: "+QString::number(black));
         }
         else
         {
             white--;
-            ui->whiteNumber->setText("White: "+QString::number(white));
+            if(!AI)ui->whiteNumber->setText("White: "+QString::number(white));
         }
 
         delete fields[beatField].getFigure();
         fields[beatField].setFigure(nullptr);
 
-        fields[beatField].setPicture();
+        if(!AI)fields[beatField].setPicture();
     }
     else {
         fields[from].getFigure()->setBeat(false);
@@ -586,58 +596,86 @@ void Board::move(int from, int to)
         fields[to].getFigure()->becomeKing();
     }
     //qDebug("set picture from");
-    fields[from].setPicture();
-    //qDebug("set picture to");
-    fields[to].setPicture();
+    if(!AI){
+        fields[from].setPicture();
+        //qDebug("set picture to");
+        fields[to].setPicture();
+    }
     //qDebug("end Move");
-    correctBoard();
+    correctBoard(AI);
+    //qDebug("after correct board in move");
     /*emit signal to inform that another player can move*/
-    emit(moved(currentPlayer));
+    if(!AI)emit(moved(currentPlayer));
 }
 
-void Board::undoMove(int from, int to, bool king)
+void Board::undoMove(int from, int to, bool wasKing, QVector<int> Kings, bool king, bool hadBeat, bool AI)
 {
+    //qDebug("start undo move");
+    active = to;
+    prevActive = from;
+    //qDebug("from");
+    //qDebug(std::to_string(from).c_str());
+    //qDebug("to");
+    //qDebug(std::to_string(to).c_str());
     int beatField = fieldToBeat(from, to);
     if(beatField != -1)
     {
+        qDebug("beat field");
+        //qDebug(std::to_string(beatField).c_str());
         Figure *figure = nullptr;
-        if(fields[to].getFigure()->getColor() == Color::BLACK)
+        if(fields[to].getFigure()->getColor() == Color::WHITE)
         {
+            //qDebug("undo black figure");
             black++;
             ui->blackNuber->setText("Black: "+QString::number(black));
             figure = new Figure(Color::BLACK);
         }
         else
         {
+            //qDebug("undo white figure");
             white++;
             ui->whiteNumber->setText("White: "+QString::number(white));
             figure = new Figure(Color::WHITE);
         }
         figure->setKing(king);
+        figure->setBeat(false);
         fields[beatField].setFigure(figure);
-        fields[beatField].setPicture();
-        fields[from].getFigure()->setBeat(false);
+        if(!AI)fields[beatField].setPicture();
+
+        /*figure->setKing(wasKing);
+        if(isKing(beatField, Kings)) figure->setKing(true);
+        fields[beatField].setFigure(figure);
+        if(!AI)fields[beatField].setPicture();
+        fields[beatField].getFigure()->setBeat(false);*/
     }
-    else {
-        fields[from].getFigure()->setBeat(false);
-    }
+
+
+    //wasKing - переменная которая показывает была ли фигура которая сейчас стоит на поле to ранее дамкой,
+    //если же была то при отмене хода она и должна остаться дамкой
     /*set figure to be a king if it reached the line*/
     if(fields[to].getFigure() && ((fields[to].getFigure()->getColor() == Color::BLACK && to/static_cast<int>(sqrt(SIZE)) == static_cast<int>(sqrt(SIZE))-1)
-            ||(fields[to].getFigure()->getColor() == Color::WHITE && to/static_cast<int>(sqrt(SIZE)) == 0)))
+            ||(fields[to].getFigure()->getColor() == Color::WHITE && to/static_cast<int>(sqrt(SIZE)) == 0)) && !wasKing)
     {
-        //qDebug("becomes king");
+        //ui->debug->append("REMOVES KING");
         fields[to].getFigure()->removeKing();
     }
+    //qDebug("set figure");
     fields[from].setFigure(fields[to].getFigure());
     //qDebug("remove figure");
     fields[to].setFigure(nullptr);
+    //qDebug("undo before set beat");
+    fields[from].getFigure()->setBeat(hadBeat);
 
-    //qDebug("set picture from");
-    fields[from].setPicture();
-    //qDebug("set picture to");
-    fields[to].setPicture();
-    //qDebug("end Move");
-    correctBoard();
+    if(!AI)
+    {
+        //qDebug("set picture from");
+        fields[from].setPicture();
+        //qDebug("set picture to");
+        fields[to].setPicture();
+    }
+    active = from;
+    //qDebug("end undo Move");
+    //correctBoard();
 }
 
 /*
@@ -1123,8 +1161,37 @@ int Board::evaluateBoard(Color maximizer)
         }
         score += -10*beats;
     }
-    ui->debug->append("Evaluation score: " + QString::number(score) + '\n');
+    //ui->debug->append("Evaluation score: " + QString::number(score) + '\n');
     return score;
+}
+
+void Board::setText(QString text)
+{
+   // ui->debug->append(text);
+}
+
+QVector<int> Board::getKings()
+{
+    QVector<int> kings;
+    for(int i = 0; i < SIZE; ++i)
+    {
+        if(fields[i].getFigure() && fields[i].getFigure()->isKing())
+        {
+            //ui->debug->append("KING: "+QString::number(i)+'\n');
+            kings.push_back(i);
+        }
+    }
+    //ui->debug->append("\n");
+    return kings;
+}
+
+bool Board::isKing(int i, QVector<int> kings)
+{
+    for(int j = 0; j < kings.size(); ++j)
+    {
+        if(i == kings[j]) return true;
+    }
+    return false;
 }
 
 Board::~Board()

@@ -65,7 +65,7 @@ field& field::operator=(const field &obj)
 field::~field()
 {
     delete figure;
-    delete checkerbutton;
+    //delete checkerbutton;
 }
 
 void field::setFigure(Figure *fig)
