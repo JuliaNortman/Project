@@ -46,7 +46,7 @@ public:
     void move() override;
     void setBoardActive();
     void setBoardUnactive();
-    void easythink(int&, int&);/*AI*/
+    Move easythink();/*AI*/
     Move hardThink();
     int minimax(Board* board, int depth, bool maximizer);
     bool isBot()override {return  true;}

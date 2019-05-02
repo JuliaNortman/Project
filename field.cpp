@@ -39,32 +39,61 @@ field::field(Color fColor, int coord)
 }
 
 field::field(const field& obj)
-    :fieldColor(obj.fieldColor), coordinate(obj.coordinate)
 {
+    fieldColor = obj.fieldColor;
+    coordinate = obj.coordinate;
     beat = obj.beat;
     moves = obj.moves;
     beats = obj.beats;
-    figure = new Figure(obj.figure);
-    checkerbutton = new ClickableLabel(obj.checkerbutton);
+    figure = new Figure;
+    if(obj.figure)
+    {
+        figure->setKing(obj.figure->isKing());
+        figure->setColor(obj.figure->getColor());
+        figure->setBeat(obj.figure->getBeat());
+    }
+    else figure = nullptr;
+    checkerbutton = new ClickableLabel;
+    checkerbutton->index = obj.checkerbutton->index;
+    checkerbutton->active = obj.checkerbutton->active;
 }
 
 field& field::operator=(const field &obj)
 {
     if(this != &obj)
     {
+        //qDebug("before destructor");
         this->~field();
+        //qDebug("after destructor");
+        fieldColor = obj.fieldColor;
+        coordinate = obj.coordinate;
         beat = obj.beat;
         moves = obj.moves;
         beats = obj.beats;
-        figure = new Figure(obj.figure);
-        checkerbutton = new ClickableLabel(obj.checkerbutton);
+        figure = new Figure;
+        if(obj.figure)
+        {
+            figure->setKing(obj.figure->isKing());
+            figure->setColor(obj.figure->getColor());
+            figure->setBeat(obj.figure->getBeat());
+        }
+        else figure = nullptr;
+        checkerbutton = new ClickableLabel;
+        checkerbutton->index = obj.checkerbutton->index;
+        checkerbutton->active = obj.checkerbutton->active;
     }
     return *this;
 }
 
 field::~field()
 {
-    delete figure;
+    qDebug("destructor field");
+    if(figure)
+    {
+        //qDebug("figure");
+        delete figure;
+        figure = nullptr;
+    }
     //delete checkerbutton;
 }
 

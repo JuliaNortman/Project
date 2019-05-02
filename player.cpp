@@ -53,8 +53,10 @@ void Person::move()
     //qDebug("Person move end");
 }
 
-void Bot::easythink(int& from, int& to)
+Move Bot::easythink()
 {
+    Move moves;
+    int from = -1, to = -1;
     srand(static_cast<unsigned int>(time(nullptr)));
     QVector<int> beat, move;
     if(color == Color::WHITE)
@@ -110,6 +112,9 @@ void Bot::easythink(int& from, int& to)
             //qDebug("to Move");
         }
     }
+    moves.from = from;
+    moves.to = to;
+    return moves;
     /*qDebug("From: To:");
     qDebug(std::to_string(from).c_str());
     qDebug(std::to_string(to).c_str());*/
@@ -142,7 +147,7 @@ int Bot::minimax(Board *board, int depth, bool maximizer)
     {
         //qDebug("4");
         return score;}
-    QVector<int> kings = board->getKings();
+    //QVector<int> kings = board->getKings();
     //bool wasKing = false;
     if(maximizer)
     {
@@ -169,31 +174,34 @@ int Bot::minimax(Board *board, int depth, bool maximizer)
             for(int j = 0; j < toMoves.size(); ++j)
             {
                 to = toMoves[j];
-                bool king = false;
+                /*bool king = false;
                 bool hadBeat = false;
                 int beatfield = board->fieldToBeat(from, to);
                 hadBeat = board->getField(from).getFigure()->getBeat();
                 if(beatfield != -1)
                 {
                     king = board->getField(beatfield).getFigure()->isKing();
-                }
+                }*/
                // qDebug("FROM/TO: ");
                 //qDebug(std::to_string(from).c_str());
                 //qDebug(std::to_string(to).c_str());
                 //qDebug("before maximizer move");
-                bool wasKing = false;
-                wasKing = board->getField(from).getFigure()->isKing();
+                /*bool wasKing = false;
+                wasKing = board->getField(from).getFigure()->isKing();*/
                 //if(wasKing) board->setText(QString::number(from)+" wasKing\n");
                 //else board->setText(QString::number(from)+" was not king\n");
-                QVector<int> Kings = board->getKings();
+                //QVector<int> Kings = board->getKings();
+                field* fields = board->getBoardFields();
                 board->move(from, to, true);
                 //qDebug("after max move");
                 //Board* b = new Board(*board);
                 best = max(best, minimax(board, depth+1, !maximizer));
                 //qDebug("before undo move in max");
                 //if(b)delete b;
-                board->undoMove(from, to, wasKing, Kings, king, hadBeat, true);
+                //board->undoMove(from, to, wasKing, Kings, king, hadBeat, true);
                 //qDebug("after undo move in max");
+                board->setBoardFields(fields);
+                board->setActivePrevactive(from, to);
                 board->correctBoard();
                 //qDebug("after correct board in max");
                 //qDebug("end maximizer");
@@ -229,32 +237,35 @@ int Bot::minimax(Board *board, int depth, bool maximizer)
             for(int j = 0; j < toMoves.size(); ++j)
             {
                 to = toMoves[j];
-                bool king = false;
+                /*bool king = false;
                 bool hadBeat = false;
                 int beatfield = board->fieldToBeat(from, to);
                 hadBeat = board->getField(from).getFigure()->getBeat();
                 if(beatfield != -1)
                 {
                     king = board->getField(beatfield).getFigure()->isKing();
-                }
+                }*/
                 //qDebug("FROM/TO: ");
-               //// qDebug(std::to_string(from).c_str());
+               // qDebug(std::to_string(from).c_str());
                // qDebug(std::to_string(to).c_str());
                 //qDebug("before min move");
-                bool wasKing = false;
-                wasKing = board->getField(from).getFigure()->isKing();
+                //bool wasKing = false;
+                //wasKing = board->getField(from).getFigure()->isKing();
                 //if(wasKing) board->setText(QString::number(from)+"wasKing\n");
                 //else board->setText(QString::number(from)+"was not king\n");
-                QVector<int> Kings = board->getKings();
+                //QVector<int> Kings = board->getKings();
+                field* fields = board->getBoardFields();
                 board->move(from, to, true);
                 //qDebug("after min move");
                 //Board*b = new Board(*board);
                 best = min(best, minimax(board, depth+1, maximizer));
                 //qDebug("before undo move in min");
                 //if(b)delete b;
-                board->undoMove(from, to, wasKing, Kings, king, hadBeat, true);
+                //board->undoMove(from, to, wasKing, Kings, king, hadBeat, true);
                 //qDebug("after undo move in min");
-                board->correctBoard(true);
+                board->setBoardFields(fields);
+                board->setActivePrevactive(from, to);
+                board->correctBoard();
                 //qDebug("after correct board in min");
                 //qDebug("end minimizer");
             }
@@ -282,8 +293,8 @@ Move Bot::hardThink()
         fromMoves = board->getWhiteBeat();
         if(fromMoves.empty()) fromMoves = board->getWhiteMove();
     }
-    QVector<int> kings = board->getKings();
-    bool wasKing = false;
+    //QVector<int> kings = board->getKings();
+    //bool wasKing = false;
     for (int i = 0; i < fromMoves.size(); ++i)
     {
         from = fromMoves[i];
@@ -294,34 +305,42 @@ Move Bot::hardThink()
         for(int j = 0; j < toMoves.size(); ++j)
         {
             to = toMoves[j];
-            bool king = false;
-            int beatfield = board->fieldToBeat(from, to);
-            bool hadBeat = false;
-            hadBeat = board->getField(from).getFigure()->getBeat();
-            if(beatfield != -1)
+            //bool king = false;
+            //int beatfield = board->fieldToBeat(from, to);
+            //bool hadBeat = false;
+            //hadBeat = board->getField(from).getFigure()->getBeat();
+            /*if(beatfield != -1)
             {
                 king = board->getField(beatfield).getFigure()->isKing();
-            }
+            }*/
             /*qDebug("FROM/TO: ");
             qDebug(std::to_string(from).c_str());
             qDebug(std::to_string(to).c_str());
             qDebug("Before move in hard think");*/
-            bool wasKing = false;
-            wasKing = board->getField(from).getFigure()->isKing();
+            /*bool wasKing = false;
+            wasKing = board->getField(from).getFigure()->isKing();*/
             /*if(wasKing) board->setText(QString::number(from)+"wasKing\n");
             else board->setText(QString::number(from)+"was not king\n");*/
             //board->setText("WASKING SECOND  "+QString::number(from)+" "+QString::number(wasKing)+'\n');
-            QVector<int> Kings = board->getKings();
+            //QVector<int> Kings = board->getKings();
+            qDebug("before get Board fields in hard think");
+            field *fields = board->getBoardFields();
+            qDebug("after get Board fields in hard think");
             board->move(from, to, true);
             //Board* b = new Board(*board);
-            //qDebug("after move in hard think");
+            qDebug("after move in hard think");
             int moveVal = minimax(board, 0, false);
-            //qDebug("before undo in hard think");
+            qDebug("before setBoardFields in hard think");
             //if(b)delete b;
             //board->setText("WASKING THIRD  "+QString::number(from)+" "+QString::number(wasKing)+'\n');
-            board->undoMove(from, to, wasKing, Kings, king, hadBeat, true);
+            //board->undoMove(from, to, wasKing, Kings, king, hadBeat, true);
             //qDebug("after undo in hard think");
-            board->correctBoard(true);
+            board->setBoardFields(fields);
+            qDebug("after setBoardFields in hard think");
+            board->setActivePrevactive(from, to);
+            qDebug("before correct in hard think");
+            board->correctBoard();
+            board->setActivity(true);
 
             if(moveVal > bestVal)
             {
@@ -342,12 +361,12 @@ void Bot::move()
     {
         QTime time;
         time.start();
-        for(;time.elapsed() < 300;) {
+        for(;time.elapsed() < 700;) {
             QApplication::processEvents(nullptr);
         }
         //qDebug("while");
         int from = -1, to = -1;
-        Move move = hardThink();
+        Move move = easythink();
         from = move.from;
         to = move.to;
         if(from != -1 && to != -1)

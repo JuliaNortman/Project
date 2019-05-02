@@ -1,12 +1,17 @@
 #include "settings.h"
 #include "ui_settings.h"
 
-Settings::Settings(start* pStart, QWidget *parent) :
+Settings::Settings(start* pStart,Color color, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Settings),
     startPage(pStart)
 {
     ui->setupUi(this);
+    if(color == Color::WHITE)
+    {
+        ui->whiteRadioButton->setChecked(true);
+    }
+    else ui->blackRadioButton->setChecked(true);
 }
 
 

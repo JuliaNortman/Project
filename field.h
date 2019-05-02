@@ -17,8 +17,8 @@ Q_OBJECT
 public:
     explicit ClickableLabel(QWidget* parent=nullptr );
     ~ClickableLabel();
-    int index;
-    bool active = true;
+    int index;//index of the field[0..SIZE]
+    bool active = true;//true if the field will answer on the click
     void indexChange(int);
 
 signals:
@@ -58,28 +58,18 @@ public:
     bool canMoveTo(int);
 
     QVector<int> moves; //all possible moves from this field
-    QVector<int> beats; //all fields that the figure on this field needs to beat
+    QVector<int> beats; //all possible beat moves from the field
 
 private:
-    //moves
-    //beats
     Color fieldColor = Color::WHITE; //field`s color
-    int coordinate = -1; //field coordinate on the board
+    int coordinate = -1; //field index on the board
     Figure* figure = nullptr; //figure on the field
-    bool beat; // whether it is needed to beat this field or not
+    bool beat; // whether the figure on this field needs to beat
     ClickableLabel *checkerbutton = new ClickableLabel;
 
     // sets picture of the field
     // QString path - path of the picture
     void setPicture(const QString& path);
-
-    //bool king;
-    //bool empty;
-    //bool needToBeat;
-
-    //Color color;
-    //int coord;
-    //ClickableLabel *checkerbutton;
 };
 
 

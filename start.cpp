@@ -28,10 +28,6 @@ start::~start()
 
 void start::startGame(int k)
 {
-    /*Board *b = new Board(Color::BLACK);
-    b->show();*/
-   /* MainWindow *wnd = new MainWindow;
-    wnd->show();*/
     k = 9;
     if(!player1)
     {
@@ -56,6 +52,13 @@ void start::setPlayers(Player *pl1, Player *pl2)
 
 void start::on_toolButton_clicked()
 {
-    s = new Settings(this);
+    if(player1 && player1->getColor() == Color::BLACK)
+    {
+        s = new Settings(this, Color::BLACK);
+    }
+    else
+    {
+        s = new Settings(this, Color::WHITE);
+    }
     s->exec();
 }

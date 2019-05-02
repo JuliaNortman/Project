@@ -15,7 +15,7 @@ class Settings : public QDialog
     Q_OBJECT
 
 public:
-    explicit Settings(start*, QWidget *parent = nullptr);
+    explicit Settings(start*, Color color = Color::WHITE, QWidget *parent = nullptr);
     ~Settings();
 
 private slots:

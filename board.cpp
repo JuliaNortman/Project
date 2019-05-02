@@ -13,6 +13,10 @@
 #include <QHBoxLayout>
 #include "constants.h"
 
+
+/*constructor
+*Player* plyr - pointer to the player that will start the game
+*/
 Board::Board(Player* plyr, QWidget *parent) :
     QDialog(parent),
     currentPlayer(plyr),
@@ -20,8 +24,6 @@ Board::Board(Player* plyr, QWidget *parent) :
 {
     ui->setupUi(this);
     this->player = currentPlayer->getColor();
-    //if(player == Color::WHITE) qDebug("WHITE");
-    //else if(player == Color::BLACK) qDebug("BLACK");
     fields = new field[SIZE];
     whiteBeat = blackBeat = false;
     active = prevActive = -1;
@@ -71,6 +73,7 @@ Board::Board(Player* plyr, QWidget *parent) :
     correctBoard();
 }
 
+/*copy constructor*/
 Board::Board(const Board& obj)
 {
     white = obj.white;
@@ -122,143 +125,49 @@ void Board::modelBoard(int i)
      fields[i].setPicture();
 }
 
-
+/*
+*slot that is called when the field was clicked on
+* i - index of the clicked field
+*/
 void Board::isClicked(int i)
 {
-    ui->debug->append(QString::number(i)+'\n');
     prevActive = active;
     active = i;
-    /*qDebug("Active: PrevActive: ");
-    qDebug(std::to_string(active).c_str());
-    qDebug(std::to_string(prevActive).c_str());*/
     //if player`s figure was chosen and it was either first move or previous chosen field was empty
     //mark chosen field and all possible moves
     if((prevActive==-1 || !fields[prevActive].getFigure()) && fields[active].getFigure()
             && player == fields[active].getFigure()->getColor())
     {
-        //ui->debug->append("Mark field1");
         markField(active);
     }
     //if players figure was chosen and previous chosen field contained opponents figure
     //mark chosen field and all possible moves
     else if(fields[prevActive].getFigure()&&fields[prevActive].getFigure()->getColor() != player &&fields[active].getFigure() && player == fields[active].getFigure()->getColor())
     {
-        //ui->debug->append("Mark field2");
         markField(active);
     }
     //if previous figure was player`s figure
     else if(fields[prevActive].getFigure()&&fields[prevActive].getFigure()->getColor() == player)
     {
-        //ui->debug->append("Delete mark1");
         deleteMark(prevActive);
         //if chosen field is black and empty
-        /*if(fields[prevActive].canMoveTo(active, whiteBeat, blackBeat, currentPlayer->getColor()))
-        {
-            ui->debug->append("true");
-        }
-        else
-        {
-            ui->debug->append("false");
-        }*/
+
         if(!fields[active].getFigure() && isBlackField(active) && fields[prevActive].canMoveTo(active))
         {
             //move
-            /*qDebug("move");
-            qDebug(std::to_string(prevActive).c_str());
-            qDebug(std::to_string(active).c_str());*/
             move(prevActive, active);
         }
         if(fields[active].getFigure() && fields[active].getFigure()->getColor() == player)
         {
-           // ui->debug->append("Mark field3");
             markField(active);
         }
     }
-        /*if(prevActive == -1 && fields[i].getFigure()->getColor() == Color::BLACK)
-        {
-            markField(i);
-        }
-        else if(!isBlackField(prevActive) && fields[i].getFigure()->getColor()== Color::BLACK)
-        {
-            markField(i);
-        }
-        else if(isBlackField(prevActive) && fields[prevActive].color==0 && fields[i].color == 1)
-        {
-            markField(i);
-        }
-        else if(isBlackField(prevActive) && fields[prevActive].color==2 && fields[i].color == 1)
-        {
-            markField(i);
-        }
-        else if(isBlackField(prevActive) && fields[prevActive].color==1)
-        {
-            if(!isBlackField(i) || fields[i].color == 2)
-            {
-                deleteMark(prevActive);
-            }
-            else if(fields[i].color == 1)
-            {
-                deleteMark(prevActive);
-                markField(i);
-            }
-            else if(fields[i].color == 0)
-            {
-                if(isNeighbor(prevActive, i))
-                {
-                    for(int j = 0; j < fields[prevActive].neighbors.size(); ++j)
-                    {
-                        setPicture(fields[prevActive].neighbors[j], "Images/blackField.png");
-                    }
-                    move(prevActive, i);
-                    analyseField();
-                    if(black > 0 && (!fields[i].beat || !fields[i].needToBeat) && prevActive != -1)
-                    {
-                        //black move
-                        srand(QDateTime::currentMSecsSinceEpoch());
-                        int from = 0;
-                        if(blackMove.size()-1==0) from = 0;
-                        else from = 0 + rand()%(blackMove.size()-1);
-                        int to = 0;
-                        if(fields[from].neighbors.size()-1 == 0) to = 0;
-                        else to = 0 + rand()%(fields[from].neighbors.size()-1);
-                        if(blackBeat && fields[blackMove[from]].needToBeat)
-                        {
-                            int fromField = blackMove[from];
-                            int toField = fields[blackMove[from]].neighbors[to];
-                            while(fields[fromField].needToBeat)
-                            {
-                                QTime time;
-                                time.start();
-                                for(;time.elapsed() < 500;) {
-                                    qApp->processEvents(nullptr);
-                                }
-                                move(fromField, toField);
-                                analyseField();
-                                fromField = toField;
-                                toField = fields[fromField].neighbors[0];
-                            }
-                        }
-                        else
-                        {
-                            QTime time;
-                            time.start();
-                            for(;time.elapsed() < 500;) {
-                                qApp->processEvents(nullptr);
-                            }
-                            move(blackMove[from], fields[blackMove[from]].neighbors[to]);
-                            analyseField();
-                        }
-                    }
-                }
-                else
-                {
-                    deleteMark(prevActive);
-                }
-                for(int p = 0; p < 64; ++p) fields[p].beat = false;
-            }
-        }*/
 }
 
+/*
+* returns vector of field`s indexes where figure can move on
+* i - index of the current figure`s position
+*/
 QVector<int> Board::neighborFieldsToMove(int i)
 {
     QVector<int> result;
@@ -269,35 +178,33 @@ QVector<int> Board::neighborFieldsToMove(int i)
             && !fields[i-static_cast<int>(sqrt(SIZE))-1].getFigure()
             &&(fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::WHITE))
     {
-        //qDebug("i-9");
         result.push_back(i-static_cast<int>(sqrt(SIZE))-1);
     }
     if(i+static_cast<int>(sqrt(SIZE))+1 < SIZE && isBlackField(i+static_cast<int>(sqrt(SIZE))+1)
             && !fields[i+static_cast<int>(sqrt(SIZE))+1].getFigure()
             &&(fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::BLACK))
     {
-        //qDebug("i+9");
         result.push_back(i+static_cast<int>(sqrt(SIZE))+1);
     }
     if(i-static_cast<int>(sqrt(SIZE))+1 >= 0 && isBlackField(i-static_cast<int>(sqrt(SIZE))+1)
             && !fields[i-static_cast<int>(sqrt(SIZE))+1].getFigure()
             &&(fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::WHITE))
     {
-        //qDebug("i-7");
         result.push_back(i-static_cast<int>(sqrt(SIZE))+1);
     }
     if(i+static_cast<int>(sqrt(SIZE))-1 < SIZE && isBlackField(i+static_cast<int>(sqrt(SIZE))-1)
             && !fields[i+static_cast<int>(sqrt(SIZE))-1].getFigure()
             &&(fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::BLACK))
     {
-        //qDebug("i+7");
         result.push_back(i+static_cast<int>(sqrt(SIZE))-1);
     }
-    //qDebug("result size");
-    //qDebug(std::to_string(result.size()).c_str());
     return result;
 }
 
+/*
+* returns vector of field`s indexes where figure can beat on
+* i - index of the current figure`s position
+*/
 QVector<int> Board::neighborFieldsToBeat(int i)
 {
     QVector<int> result;
@@ -312,7 +219,6 @@ QVector<int> Board::neighborFieldsToBeat(int i)
             && fields[i].getFigure()->getColor() != fields[i-static_cast<int>(sqrt(SIZE))-1].getFigure()->getColor()
             && (fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::WHITE))
     {
-        //qDebug("i-18");
         result.push_back(i-2*static_cast<int>(sqrt(SIZE))-2);
     }
     if(i-static_cast<int>(sqrt(SIZE))+1>=0 && i-2*static_cast<int>(sqrt(SIZE))+2>=0
@@ -321,7 +227,6 @@ QVector<int> Board::neighborFieldsToBeat(int i)
             && fields[i].getFigure()->getColor() != fields[i-static_cast<int>(sqrt(SIZE))+1].getFigure()->getColor()
             && (fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::WHITE))
     {
-        //qDebug("i-14");
         result.push_back(i-static_cast<int>(sqrt(SIZE))*2+2);
     }
     if(i+static_cast<int>(sqrt(SIZE))+1<SIZE && i+2*static_cast<int>(sqrt(SIZE))+2<SIZE
@@ -330,7 +235,6 @@ QVector<int> Board::neighborFieldsToBeat(int i)
             && fields[i].getFigure()->getColor() != fields[i+static_cast<int>(sqrt(SIZE))+1].getFigure()->getColor()
             && (fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::BLACK))
     {
-        //qDebug("i+18");
         result.push_back(i+2*static_cast<int>(sqrt(SIZE))+2);
     }
     if(i+static_cast<int>(sqrt(SIZE))-1<SIZE && i+2*static_cast<int>(sqrt(SIZE))-2<SIZE
@@ -339,23 +243,15 @@ QVector<int> Board::neighborFieldsToBeat(int i)
             && fields[i].getFigure()->getColor() != fields[i+static_cast<int>(sqrt(SIZE))-1].getFigure()->getColor()
             && (fields[i].getFigure()->isKing()||fields[i].getFigure()->getColor() == Color::BLACK))
     {
-        //qDebug("i+14");
         result.push_back(i+2*static_cast<int>(sqrt(SIZE))-2);
     }
     return result;
 }
-/*
-//check if field j is availible from the field i
-bool Board::isNeighbor(int i, int j)
-{
-    for(int k = 0; k < fields[i].neighbors.size(); ++k)
-    {
-        if(fields[i].neighbors[k] == j) return true;
-    }
-    return false;
-}
-*/
 
+/*
+*marks all fields where figure can move on
+* i - index of the field`s index
+*/
 void Board::markField(int i)
 {
     fields[i].markField();
@@ -363,7 +259,6 @@ void Board::markField(int i)
     //mark all fields that this figure can beat
     if(!fields[i].beats.empty())
     {
-        //qDebug("first if");
         for(int j = 0; j < fields[i].beats.size(); ++j)
         {
             fields[fields[i].beats[j]].markField();
@@ -373,19 +268,13 @@ void Board::markField(int i)
     }
 
     //do nothing if player needs to beat but this figure cannot beat
-    //if(whiteBeat) qDebug("whiteBeat");
-    //if(fields[i].getFigure()->getColor() == Color::WHITE) qDebug("WHITE");
-    //if(blackBeat) qDebug("blackBeat");
-    //if(fields[i].getFigure()->getColor() == Color::BLACK) qDebug("BLACK");
     if(whiteBeat && fields[i].getFigure()->getColor() == Color::WHITE)
     {
-        //qDebug("second if");
         fields[i].moves.clear();
         return;
     }
     if(blackBeat && fields[i].getFigure()->getColor() == Color::BLACK)
     {
-        //qDebug("third if");
         fields[i].moves.clear();
         return;
     }
@@ -393,11 +282,15 @@ void Board::markField(int i)
     //mark all fields where figure can move
     for(int j = 0; j < fields[i].moves.size(); ++j)
     {
-        //qDebug("fourth if");
         fields[fields[i].moves[j]].markField();
     }
 }
 
+
+/*
+*delete mark from all fields that where marked by markField() function
+* i - index of the field`s index
+*/
 void Board::deleteMark(int i)
 {
     fields[i].unmarkField();
@@ -422,9 +315,8 @@ void Board::deleteMark(int i)
     }
 }
 
-void Board::correctBoard(bool AI)
+void Board::correctBoard()
 {
-    //qDebug("start correct");
     whiteBeat = blackBeat = false;
     //qDebug("before white move clear");
     whiteMove.clear();
@@ -536,6 +428,8 @@ void Board::correctBoard(bool AI)
     //if(whiteBeat) qDebug("whiteBeat");
     //if(blackBeat) qDebug("blackBeat");
     //qDebug("before setCanMove");
+    //if(gameEnd(currentPlayer->getColor())) ui->debug->append("END\n");
+    gameEnd();
     /*if(!AI)*/ if(currentPlayer)currentPlayer->setCanMove(false);/*it is next player`s turn to move*/
     //qDebug("End correct");
 }
@@ -602,7 +496,7 @@ void Board::move(int from, int to, bool AI)
         fields[to].setPicture();
     }
     //qDebug("end Move");
-    correctBoard(AI);
+    correctBoard();
     //qDebug("after correct board in move");
     /*emit signal to inform that another player can move*/
     if(!AI)emit(moved(currentPlayer));
@@ -1060,18 +954,19 @@ void Board::setActivity(bool active)
     }
 }
 
-bool Board::gameEnd(Color color)
+void Board::gameEnd(/*Color color*/)
 {
+    Color color = currentPlayer->getColor();
     /*returns true if there is no possible moves for that color*/
     if(color == Color::BLACK)
     {
-        if(whiteMove.empty() && whiteBeats.empty()) return true;
+        if(whiteMove.empty() && whiteBeats.empty()) emit end();//return true;
     }
     else
     {
-        if(blackMove.empty() && blackBeats.empty()) return true;
+        if(blackMove.empty() && blackBeats.empty()) emit end(); //return true;
     }
-    return false;
+    //return false;
 }
 
 int Board::evaluateBoard(Color maximizer)
@@ -1165,33 +1060,37 @@ int Board::evaluateBoard(Color maximizer)
     return score;
 }
 
-void Board::setText(QString text)
-{
-   // ui->debug->append(text);
-}
 
-QVector<int> Board::getKings()
+
+field* Board::getBoardFields()
 {
-    QVector<int> kings;
+    field* f = new field[SIZE];
     for(int i = 0; i < SIZE; ++i)
     {
-        if(fields[i].getFigure() && fields[i].getFigure()->isKing())
-        {
-            //ui->debug->append("KING: "+QString::number(i)+'\n');
-            kings.push_back(i);
-        }
+        //qDebug(std::to_string(i).c_str());
+        f[i] = fields[i];
     }
-    //ui->debug->append("\n");
-    return kings;
+    return f;
 }
 
-bool Board::isKing(int i, QVector<int> kings)
+void Board::setBoardFields(field *f)
 {
-    for(int j = 0; j < kings.size(); ++j)
+    if(fields != f)
     {
-        if(i == kings[j]) return true;
+        qDebug("before delete fields in setBoard fields");
+        for(int i = 0; i < SIZE; ++i)
+        {
+            if(fields[i].getColor()==Color::BLACK)qDebug("Color black");
+            else qDebug("Color white");
+        }
+        //delete [] fields;
+        qDebug("after delete fields in setBoard fields");
+        fields = f;
+        for(int i = 0; i < SIZE; ++i)
+        {
+            connect(fields[i].getCheckerbutton(), SIGNAL(clicked(int)), this, SLOT(isClicked(int)));
+        }
     }
-    return false;
 }
 
 Board::~Board()

@@ -24,73 +24,61 @@ public:
     Board(const Board&);
     ~Board();
     void modelBoard(int);
-        //void setPicture(int, QString);
-        bool isBlackField(int);
-        bool isNeighbor(int, int);
-        void markField(int); //???????? ????? ?????? ? ?? ???????
-        void deleteMark(int); //?????? ????????? ? ????? ?????? ? ?? ???????
-        void analyseField();
-        bool needToBeatThisField(int, int);
-        /*whether the field can be moved*/
-        //bool canMove(int);
-        //void analyseKingField(bool&, int, QVector<int>&); //function that is used in analyseField for kings
-        //void analyseSimpleField(bool&, int, int, QVector<int>&);
-        void move(int from, int to, bool AI = false);
-        void undoMove(int from, int to, bool wasKing, QVector<int> Kings, bool king = false, bool hadBeat = false, bool AI = false);
+    bool isBlackField(int);
+    void markField(int);
+    void deleteMark(int);
+    void move(int from, int to, bool AI = false);
+    void undoMove(int from, int to, bool wasKing, QVector<int> Kings, bool king = false, bool hadBeat = false, bool AI = false);
+    //finds all fields where the figure from field i can move
+    QVector<int> neighborFieldsToMove(int);
+    //finds all fields that the figure must beat
+    QVector<int> neighborFieldsToBeat(int);
+    //sets correct neighbors to the all fields on the board
+    void correctBoard();
+    void setActivity(bool);
+    void setCurrentPlayer(Player* pl){currentPlayer = pl;}/*sets current player who is active at the moment*/
+    void gameEnd(/*Color color*/);/*returns true if the game is over*/
+    int evaluateBoard(Color maximizer);/*evaluation of the current board state*/
+    field getField(int i){return fields[i];}
+    field* getBoardFields();
+    void setBoardFields(field* f);
 
-        //finds all fields where the figure from field i can move
-        QVector<int> neighborFieldsToMove(int);
-        //finds all fields that the figure must beat
-        QVector<int> neighborFieldsToBeat(int);
-        //sets correct neighbors to the all fields on the board
-        void correctBoard(bool AI = false);
-        void setActivity(bool);
-        void setCurrentPlayer(Player* pl){currentPlayer = pl;}/*sets current player who is active at the moment*/
-        bool gameEnd(Color color);/*returns true if the game is over*/
-        int evaluateBoard(Color maximizer);/*evaluation of the current board state*/
-        field getField(int i){return fields[i];}
-
-        QVector<int> getWhiteMove(){return whiteMove;}
-        QVector<int> getBlackMove(){return blackMove;}
-        QVector<int> getWhiteBeat(){return whiteBeats;}
-        QVector<int> getBlackBeat(){return blackBeats;}
-        QVector<int> getFieldBeats(int i){return fields[i].beats;}
-        QVector<int> getFieldsMoves(int i){return fields[i].moves;}
-        int getWhiteNumber(){return white;}
-        int getBlackNumber(){return black;}
-        /*sets from and to field after bot move*/
-        void setActivePrevactive(int from, int to)
-        {
-            active = to;
-            prevActive = from;
-        }
-        /*returns the field which figure will beat if it is a beat move
+    QVector<int> getWhiteMove(){return whiteMove;}
+    QVector<int> getBlackMove(){return blackMove;}
+    QVector<int> getWhiteBeat(){return whiteBeats;}
+    QVector<int> getBlackBeat(){return blackBeats;}
+    QVector<int> getFieldBeats(int i){return fields[i].beats;}
+    QVector<int> getFieldsMoves(int i){return fields[i].moves;}
+    int getWhiteNumber(){return white;}
+    int getBlackNumber(){return black;}
+    /*sets from and to field after bot move*/
+    void setActivePrevactive(int from, int to)
+    {
+        active = to;
+        prevActive = from;
+    }
+    /*returns the field which figure will beat if it is a beat move
           while it moves 'from' 'to'*/
-        int fieldToBeat(int from, int to);
-
-
-        void setText(QString text);
-        QVector<int> getKings();
-        bool isKing(int, QVector<int>);
+    int fieldToBeat(int from, int to);
 
     protected:
 
 
-        int white; //quantaty of available white figures on the field
-        int black; //quantaty of available black figures on the field
-        field *fields;
-        int active = -1; //index of field that is active at the present moment
-        int prevActive = -1;
-        bool whiteBeat; //checks whether is needed to beat white figure
-        bool blackBeat; //checks whether is needed to beat black figure
-        QVector<int> whiteMove; //all white possible moves
-        QVector<int> blackMove; //all black possible moves
-        QVector<int> whiteBeats; //all fields (white figures) that need to beat
-        QVector<int> blackBeats; //all fields (black figures) that need to beat
-        Color player; //what color of figures main player plays
-        bool isActive = true;
+    int white; //quantaty of white figures on the field
+    int black; //quantaty of black figures on the field
+    field *fields;
+    int active = -1; //index of field that is clicked at the present moment
+    int prevActive = -1; //index of the field that was clicked before the active
+    bool whiteBeat; //true if white player needs to beat
+    bool blackBeat; //true if black player needs to beat
+    QVector<int> whiteMove; //indexes of the fields that white player can move from
+    QVector<int> blackMove; //indexes of the fields that black player can move from
+    QVector<int> whiteBeats; //indexes of the fields that white player can beat from
+    QVector<int> blackBeats; //indexes of the fields that black player can beat from
+    Color player; //what color is main player
+    bool isActive = true; //true if board answer on the click
 
-        Player* currentPlayer = nullptr;/*who is active at present moment*/
+    Player* currentPlayer = nullptr;/*who is active at present moment*/
 
 
 
@@ -99,6 +87,7 @@ public:
         void isClicked(int i);
     signals:
         void moved(Player*);/*emits when player has moved*/
+        void end();
 
 private:
     Ui::Board *ui;
