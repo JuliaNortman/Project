@@ -48,9 +48,9 @@ void Bot::setBoardUnactive()
 
 void Person::move()
 {
-    //qDebug("before person move");
+    qDebug("before person move");
     setBoardActive();
-    //qDebug("Person move end");
+    qDebug("Person move end");
 }
 
 Move Bot::easythink()
@@ -336,9 +336,9 @@ Move Bot::hardThink()
             //board->undoMove(from, to, wasKing, Kings, king, hadBeat, true);
             //qDebug("after undo in hard think");
             board->setBoardFields(fields);
-            qDebug("after setBoardFields in hard think");
+            //qDebug("after setBoardFields in hard think");
             board->setActivePrevactive(from, to);
-            qDebug("before correct in hard think");
+            //qDebug("before correct in hard think");
             board->correctBoard();
             board->setActivity(true);
 
@@ -355,7 +355,7 @@ Move Bot::hardThink()
 
 void Bot::move()
 {
-    //qDebug("before bot move");
+    qDebug("before bot move");
     setBoardUnactive();
     while(canMove)
     {
@@ -379,5 +379,6 @@ void Bot::move()
     }
 
     setBoardActive();
-   // qDebug("End bot move");
+    emit(board->moved(this));
+    qDebug("End bot move");
 }

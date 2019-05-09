@@ -29,12 +29,12 @@ Game::Game(Player* pl1, Player* pl2)
 
 void Game::play(Player* currentPlayer)
 {
-    //qDebug("Slot");
+    qDebug("Slot");
     /*if(currentPlayer == player1) qDebug("PLAYER1");
     else if(currentPlayer == player2) qDebug("PLAYER2");*/
-    int score = 0;
+    /*int score = 0;
     if(player1->isBot()) score = board->evaluateBoard(player1->getColor());
-    else score = board->evaluateBoard(player2->getColor());
+    else score = board->evaluateBoard(player2->getColor());*/
     if(!currentPlayer->getCanMove())
     {
         //qDebug("end of current player moves");

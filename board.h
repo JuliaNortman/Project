@@ -27,8 +27,8 @@ public:
     bool isBlackField(int);
     void markField(int);
     void deleteMark(int);
-    void move(int from, int to, bool AI = false);
-    void undoMove(int from, int to, bool wasKing, QVector<int> Kings, bool king = false, bool hadBeat = false, bool AI = false);
+    void move(int from, int to);
+    void undoMove(int from, int to, bool wasKing, bool king = false, bool hadBeat = false);
     //finds all fields where the figure from field i can move
     QVector<int> neighborFieldsToMove(int);
     //finds all fields that the figure must beat
