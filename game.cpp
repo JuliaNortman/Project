@@ -36,7 +36,7 @@ void Game::play(Player* currentPlayer)
     /*active player has made all his moves*/
     if(!currentPlayer->getCanMove())
     {
-        //changeactive player
+        //change active player
         if(currentPlayer == player1)
         {
             board->setCurrentPlayer(player2);

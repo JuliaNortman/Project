@@ -15,7 +15,7 @@ start::start(QWidget *parent) :
     k = 9;
     ClickableLabel *lbl = new ClickableLabel;
     ui->startLable->addWidget(lbl);
-    QPixmap checkerbuttonPix("Images/start.png");
+    QPixmap checkerbuttonPix(":/img/Images/start.png");
     lbl->setPixmap(checkerbuttonPix);
     lbl->setScaledContents(true);
     connect(lbl, SIGNAL(clicked(int)), this, SLOT(startGame(int)));

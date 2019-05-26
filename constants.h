@@ -10,16 +10,16 @@ const int SIZE = 64;
 
 const int DEPTH = 1;
 
-const QString blackField = "Images/blackField.png";
-const QString whiteField = "Images/whiteField.png";
-const QString blackSimpleFigure = "Images/redSimpleFigure.png";
-const QString whiteSimpleFigure = "Images/whiteSimpleFigure.png";
-const QString blackKing = "Images/blackKing.png";
-const QString whiteKing = "Images/whiteKing.png";
+const QString blackField = ":/img/Images/blackField.png";
+const QString whiteField = ":/img/Images/whiteField.png";
+const QString blackSimpleFigure = ":/img/Images/redSimpleFigure.png";
+const QString whiteSimpleFigure = ":/img/Images/whiteSimpleFigure.png";
+const QString blackKing = ":/img/Images/blackKing.png";
+const QString whiteKing = ":/img/Images/whiteKing.png";
 
-const QString blackChosenField = "Images/blackChosenField.png";
-const QString blackChosenFigure = "Images/blackChosenFigure.png";
-const QString whiteChosenFigure = "Images/whiteChosenFigure.png";
-const QString blackChosenKing = "Images/blackChosenKing.png";
-const QString whiteChosenKing = "Images/whiteChosenKing.png";
+const QString blackChosenField = ":/img/Images/blackChosenField.png";
+const QString blackChosenFigure = ":/img/Images/blackChosenFigure.png";
+const QString whiteChosenFigure = ":/img/Images/whiteChosenFigure.png";
+const QString blackChosenKing = ":/img/Images/blackChosenKing.png";
+const QString whiteChosenKing = ":/img/Images/whiteChosenKing.png";
 

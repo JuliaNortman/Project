@@ -1,7 +1,6 @@
 #include <QPushButton>
 #include <QStyle>
 #include <QLabel>
-#include <QDebug>
 #include <QMouseEvent>
 #include "field.h"
 

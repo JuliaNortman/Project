@@ -37,7 +37,7 @@ public:
     void correctBoard();
     void setActivity(bool);
     void setCurrentPlayer(Player* pl){currentPlayer = pl;}/*sets current player who is active at the moment*/
-    void gameEnd(/*Color color*/);/*returns true if the game is over*/
+    void gameEnd();/*returns true if the game is over*/
     int evaluateBoard(Color maximizer);/*evaluation of the current board state*/
     field getField(int i){return fields[i];}
     field* getBoardFields();

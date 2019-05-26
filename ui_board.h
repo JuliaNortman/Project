@@ -51,11 +51,11 @@ public:
         Board->setPalette(palette);
         gridLayoutWidget = new QWidget(Board);
         gridLayoutWidget->setObjectName(QString::fromUtf8("gridLayoutWidget"));
-        gridLayoutWidget->setGeometry(QRect(30, 66, 411, 391));
+        gridLayoutWidget->setGeometry(QRect(30, 66, 401, 391));
         gridChBoard = new QGridLayout(gridLayoutWidget);
         gridChBoard->setSpacing(0);
         gridChBoard->setObjectName(QString::fromUtf8("gridChBoard"));
-        gridChBoard->setSizeConstraint(QLayout::SetMinAndMaxSize);
+        gridChBoard->setSizeConstraint(QLayout::SetDefaultConstraint);
         gridChBoard->setContentsMargins(0, 0, 0, 0);
         widget = new QWidget(Board);
         widget->setObjectName(QString::fromUtf8("widget"));
@@ -65,11 +65,7 @@ public:
         horizontalLayout->setContentsMargins(0, 0, 0, 0);
         whiteNumber = new QLabel(widget);
         whiteNumber->setObjectName(QString::fromUtf8("whiteNumber"));
-        whiteNumber->setStyleSheet(QString::fromUtf8("QLable\n"
-"{\n"
-"	font-style: bold;\n"
-"}\n"
-""));
+        whiteNumber->setStyleSheet(QString::fromUtf8(""));
 
         horizontalLayout->addWidget(whiteNumber);
 

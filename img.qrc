@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>Images/blackChosenField.png</file>
+        <file>Images/blackChosenFigure.png</file>
+        <file>Images/blackChosenKing.png</file>
+        <file>Images/blackField.png</file>
+        <file>Images/blackKing.png</file>
+        <file>Images/redSimpleFigure.png</file>
+        <file>Images/start.png</file>
+        <file>Images/whiteChosenFigure.png</file>
+        <file>Images/whiteChosenKing.png</file>
+        <file>Images/whiteField.png</file>
+        <file>Images/whiteKing.png</file>
+        <file>Images/whiteSimpleFigure.png</file>
+        <file>Images/settings.png</file>
+    </qresource>
+</RCC>
