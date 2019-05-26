@@ -61,6 +61,10 @@ public:
         toolButton = new QToolButton(start);
         toolButton->setObjectName(QString::fromUtf8("toolButton"));
         toolButton->setGeometry(QRect(544, 30, 61, 21));
+        toolButton->setStyleSheet(QString::fromUtf8("QPushButton\n"
+"{\n"
+"	color: red;\n"
+"}"));
 
         retranslateUi(start);
 

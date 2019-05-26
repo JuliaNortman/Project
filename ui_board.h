@@ -13,8 +13,9 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QGridLayout>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QTextBrowser>
+#include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -24,16 +25,18 @@ class Ui_Board
 public:
     QWidget *gridLayoutWidget;
     QGridLayout *gridChBoard;
+    QWidget *widget;
+    QHBoxLayout *horizontalLayout;
     QLabel *whiteNumber;
+    QSpacerItem *horizontalSpacer;
     QLabel *blackNuber;
-    QTextBrowser *debug;
 
     void setupUi(QDialog *Board)
     {
         if (Board->objectName().isEmpty())
             Board->setObjectName(QString::fromUtf8("Board"));
         Board->setEnabled(true);
-        Board->resize(802, 685);
+        Board->resize(479, 480);
         QPalette palette;
         QBrush brush(QColor(255, 255, 255, 255));
         brush.setStyle(Qt::SolidPattern);
@@ -48,20 +51,37 @@ public:
         Board->setPalette(palette);
         gridLayoutWidget = new QWidget(Board);
         gridLayoutWidget->setObjectName(QString::fromUtf8("gridLayoutWidget"));
-        gridLayoutWidget->setGeometry(QRect(350, 190, 281, 271));
+        gridLayoutWidget->setGeometry(QRect(30, 66, 411, 391));
         gridChBoard = new QGridLayout(gridLayoutWidget);
         gridChBoard->setSpacing(0);
         gridChBoard->setObjectName(QString::fromUtf8("gridChBoard"));
+        gridChBoard->setSizeConstraint(QLayout::SetMinAndMaxSize);
         gridChBoard->setContentsMargins(0, 0, 0, 0);
-        whiteNumber = new QLabel(Board);
+        widget = new QWidget(Board);
+        widget->setObjectName(QString::fromUtf8("widget"));
+        widget->setGeometry(QRect(30, 30, 411, 22));
+        horizontalLayout = new QHBoxLayout(widget);
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        horizontalLayout->setContentsMargins(0, 0, 0, 0);
+        whiteNumber = new QLabel(widget);
         whiteNumber->setObjectName(QString::fromUtf8("whiteNumber"));
-        whiteNumber->setGeometry(QRect(70, 30, 91, 21));
-        blackNuber = new QLabel(Board);
+        whiteNumber->setStyleSheet(QString::fromUtf8("QLable\n"
+"{\n"
+"	font-style: bold;\n"
+"}\n"
+""));
+
+        horizontalLayout->addWidget(whiteNumber);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout->addItem(horizontalSpacer);
+
+        blackNuber = new QLabel(widget);
         blackNuber->setObjectName(QString::fromUtf8("blackNuber"));
-        blackNuber->setGeometry(QRect(610, 30, 121, 21));
-        debug = new QTextBrowser(Board);
-        debug->setObjectName(QString::fromUtf8("debug"));
-        debug->setGeometry(QRect(10, 70, 311, 411));
+
+        horizontalLayout->addWidget(blackNuber);
+
 
         retranslateUi(Board);
 

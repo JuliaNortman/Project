@@ -15,29 +15,37 @@ ClickableLabel::~ClickableLabel()
 {
 }
 
+/**
+ * @brief react on the left mouse click
+ */
 void ClickableLabel::mousePressEvent(QMouseEvent* event)
 {
-    if(active)
+    if(event->button() == Qt::LeftButton && active)
     {
         emit clicked(index);
     }
 }
 
+/**
+ * @brief sets correct index
+ * @param i Index that should be set
+ */
 void ClickableLabel::indexChange(int i)
 {
     index = i;
 }
 
+/**
+ * @brief Constructor
+ */
 field::field(Color fColor, int coord)
     :fieldColor(fColor), coordinate(coord), beat(false)
 {
-    //king = false;
-    //empty = true;
-    //coord = -1;
-    //needToBeat = false;
-    //checkerbutton = new ClickableLabel();
 }
 
+/**
+ * @brief Copy constructor
+ */
 field::field(const field& obj)
 {
     fieldColor = obj.fieldColor;
@@ -62,9 +70,7 @@ field& field::operator=(const field &obj)
 {
     if(this != &obj)
     {
-        //qDebug("before destructor");
         this->~field();
-        //qDebug("after destructor");
         fieldColor = obj.fieldColor;
         coordinate = obj.coordinate;
         beat = obj.beat;
@@ -85,22 +91,32 @@ field& field::operator=(const field &obj)
     return *this;
 }
 
+/**
+ * @brief Destructor
+ */
 field::~field()
 {
-    qDebug("destructor field");
     if(figure)
     {
-        //qDebug("figure");
         delete figure;
         figure = nullptr;
     }
-    //delete checkerbutton;
+    delete checkerbutton;
 }
 
+/**
+ * @brief set figure on the field
+ * @param fig Figure that should be set
+ */
 void field::setFigure(Figure *fig)
 {
     figure = fig;
 }
+
+/**
+ * @brief remove figure from the field
+ * @return removed figure
+ */
 Figure* field::removeFigure()
 {
     Figure* f = figure;
@@ -108,11 +124,19 @@ Figure* field::removeFigure()
     return f;
 }
 
+/**
+  * @brief get figure
+  * @return figure that is on the field or nullptr if there is no figure
+  */
  Figure* field::getFigure()
  {
      return figure;
  }
 
+ /**
+  * @brief sets picture on the field
+  * @param path Path of the picture
+  */
  void field::setPicture(const QString& path)
  {
      QPixmap checkerbuttonPix(path);
@@ -120,6 +144,11 @@ Figure* field::removeFigure()
      checkerbutton->setScaledContents(true);
  }
 
+
+ /**
+  * @brief choose what picture should be set according to the parametres of the field
+  * and set the picture
+  */
  void field::setPicture()
  {
      if(fieldColor == Color::WHITE) setPicture(whiteField);
@@ -139,11 +168,19 @@ Figure* field::removeFigure()
       }
  }
 
+ /**
+  * @brief set whether the field should react on mouse click
+  * @param active - thrue if the field should react on click
+  * false otherwise
+  */
  void field::setActive(bool active)
  {
      checkerbutton->active = active;
  }
 
+ /**
+  * @brief choose what picture should be set onthe field when it is clicked
+  */
  void field::markField()
  {
      if(!figure && fieldColor == Color::BLACK) setPicture(blackChosenField);
@@ -159,50 +196,41 @@ Figure* field::removeFigure()
      }
  }
 
+ /**
+  * @brief set correct picture on the field
+  */
  void field::unmarkField()
  {
      setPicture();
  }
 
+ /**
+  * @brief add possible move to the vector of moves
+  * @param i Index of the field for possible moves
+  */
  void field::addMove(int i)
  {
      moves.push_back(i);
  }
 
+ /**
+  * @brief checks whether the figure on the field can move to the field with index to
+  * @param to Field where figure need to move
+  * @return true if the move is allowed
+  * false otherwise
+  */
  bool field::canMoveTo(int to)
  {
-     //qDebug("start move to");
-     /*if(beat) qDebug("beat");
-     else if(!beat) qDebug("not beat");
-     if(col == Color::WHITE)qDebug("CURRENT PLAYER COLOR IS WHITE");
-     if(col == Color::BLACK)qDebug("CURRENT PLAYER COLOR IS BLACK");*/
+     //checks if figure need to beat on the field with index to
      for(int i = 0; i < beats.size(); ++i)
      {
          if(beats[i] == to)
-         {
-             //qDebug("can beat");
              return true;
-         }
      }
-     /*if(col == Color::WHITE && whiteBeat && !beat)
-     {
-         //qDebug("can not white beat");
-         return false;
-     }
-     if(col == Color::BLACK && blackBeat && !beat)
-     {
-         //qDebug("can not black beat");
-         return false;
-     }*/
+     //checks if figure need to move on the field with index to
      for(int i = 0; i < moves.size(); ++i)
      {
-         if(moves[i] == to)
-         {
-             //qDebug("can move");
-             return true;
-         }
+         if(moves[i] == to) return true;
      }
-     /*qDebug("else");
-     qDebug("end move to");*/
      return false;
  }

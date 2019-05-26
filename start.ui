@@ -131,6 +131,12 @@ p, li { white-space: pre-wrap; }
      <height>21</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	color: red;
+}</string>
+   </property>
    <property name="text">
     <string>Settings</string>
    </property>

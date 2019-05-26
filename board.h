@@ -61,7 +61,7 @@ public:
           while it moves 'from' 'to'*/
     int fieldToBeat(int from, int to);
 
-    protected:
+protected:
 
 
     int white; //quantaty of white figures on the field

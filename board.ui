@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>802</width>
-    <height>685</height>
+    <width>479</width>
+    <height>480</height>
    </rect>
   </property>
   <property name="palette">
@@ -83,53 +83,66 @@
   <widget class="QWidget" name="gridLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>350</x>
-     <y>190</y>
-     <width>281</width>
-     <height>271</height>
+     <x>30</x>
+     <y>66</y>
+     <width>411</width>
+     <height>391</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridChBoard">
+    <property name="sizeConstraint">
+     <enum>QLayout::SetMinAndMaxSize</enum>
+    </property>
     <property name="spacing">
      <number>0</number>
     </property>
    </layout>
   </widget>
-  <widget class="QLabel" name="whiteNumber">
+  <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>70</x>
+     <x>30</x>
      <y>30</y>
-     <width>91</width>
-     <height>21</height>
+     <width>411</width>
+     <height>22</height>
     </rect>
    </property>
-   <property name="text">
-    <string>White: 12</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="blackNuber">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
-     <y>30</y>
-     <width>121</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Black: 12</string>
-   </property>
-  </widget>
-  <widget class="QTextBrowser" name="debug">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>70</y>
-     <width>311</width>
-     <height>411</height>
-    </rect>
-   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QLabel" name="whiteNumber">
+      <property name="styleSheet">
+       <string notr="true">QLable
+{
+	font-style: bold;
+}
+</string>
+      </property>
+      <property name="text">
+       <string>White: 12</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QLabel" name="blackNuber">
+      <property name="text">
+       <string>Black: 12</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>

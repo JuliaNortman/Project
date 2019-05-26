@@ -34,40 +34,26 @@ Board::Board(Player* plyr, QWidget *parent) :
 
     if(player == Color::WHITE)
     {
-        QHBoxLayout *layout = nullptr;
         for(int i = 0; i < SIZE; ++i)
         {
-            if(i%static_cast<int>(sqrt(SIZE)) == 0)
-            {
-                layout  = new QHBoxLayout;
-            }
+            int row = i/static_cast<int>(sqrt(SIZE));
+            int column = i%static_cast<int>(sqrt(SIZE));
+            ui->gridChBoard->addWidget(fields[i].getCheckerbutton(), row, column);
             fields[i].setCoordinate(i);
             fields[i].getCheckerbutton()->indexChange(i);
-            layout->addWidget(fields[i].getCheckerbutton());
-            if((i+1)%static_cast<int>(sqrt(SIZE)) == 0)
-            {
-              ui->gridChBoard->addLayout(layout, i/static_cast<int>(sqrt(SIZE)), 0);
-            }
             modelBoard(i);
             connect(fields[i].getCheckerbutton(), SIGNAL(clicked(int)), this, SLOT(isClicked(int)));
         }
     }
     else
     {
-        QHBoxLayout *layout = nullptr;
         for(int i = SIZE-1; i >= 0; --i)
         {
-            if((i+1)%static_cast<int>(sqrt(SIZE)) == 0)
-            {
-               layout  = new QHBoxLayout;
-            }
+            int row = static_cast<int>(sqrt(SIZE))-1-i/static_cast<int>(sqrt(SIZE));
+            int column = static_cast<int>(sqrt(SIZE))-1-i%static_cast<int>(sqrt(SIZE));
+            ui->gridChBoard->addWidget(fields[i].getCheckerbutton(), row, column);
             fields[i].setCoordinate(i);
             fields[i].getCheckerbutton()->indexChange(i);
-            layout->addWidget(fields[i].getCheckerbutton());
-            if(i%static_cast<int>(sqrt(SIZE)) == 0)
-            {
-                ui->gridChBoard->addLayout(layout, (SIZE-i-1)/static_cast<int>(sqrt(SIZE)), 0);
-            }
             modelBoard(i);
             connect(fields[i].getCheckerbutton(), SIGNAL(clicked(int)), this, SLOT(isClicked(int)));
         }
@@ -145,6 +131,9 @@ void Board::isClicked(int i)
 {
     prevActive = active;
     active = i;
+    //if player`s firt click was on empty field - do nothing
+    if(prevActive == -1 && (!fields[active].getFigure()||fields[active].getFigure()->getColor() != currentPlayer->getColor()))
+        return;
     //if player`s figure was chosen and it was either first move or previous chosen field was empty
     //mark chosen field and all possible moves
     if((prevActive==-1 || !fields[prevActive].getFigure()) && fields[active].getFigure()
@@ -170,7 +159,7 @@ void Board::isClicked(int i)
             //move
             move(prevActive, active);
         }
-        if(fields[active].getFigure() && fields[active].getFigure()->getColor() == player)
+        else if(fields[active].getFigure() && fields[active].getFigure()->getColor() == player)
         {
             markField(active);
         }
@@ -353,13 +342,13 @@ void Board::correctBoard()
         currentPlayer->setCanMove(true);/*need to move again*/
         if(fields[active].getFigure()->getColor() == Color::BLACK)
         {
-            blackBeat = true;
-            blackBeats.push_back(active);
+            blackBeat = true; //set that black player have to beat
+            blackBeats.push_back(active); //set field that have to be beaten
         }
         else
         {
-            whiteBeat = true;
-            whiteBeats.push_back(active);
+            whiteBeat = true; //set that white player have to beat
+            whiteBeats.push_back(active); //set field that have to be beaten
         }
         for(int i = 0; i < SIZE; ++i)
         {
@@ -421,7 +410,7 @@ void Board::correctBoard()
     }
     if(whiteBeat) whiteMove.clear();
     if(blackBeat) blackMove.clear();
-    gameEnd();
+    gameEnd();// check if the game is not over
     if(currentPlayer)currentPlayer->setCanMove(false);/*it is next player`s turn to move*/
 }
 
@@ -492,7 +481,7 @@ void Board::move(int from, int to)
     fields[to].setPicture();
     correctBoard();
     /*emit signal to inform that another player can move*/
-    if(!currentPlayer->isBot())emit(moved(currentPlayer));
+    if(!currentPlayer->isBot()) emit(moved(currentPlayer));
 }
 
 
@@ -562,21 +551,30 @@ void Board::setActivity(bool active)
     }
 }
 
-void Board::gameEnd(/*Color color*/)
+/**
+ * @brief Indicates that the game is over
+ */
+void Board::gameEnd()
 {
     Color color = currentPlayer->getColor();
-    /*returns true if there is no possible moves for that color*/
+    /*black player finished his moves and white player does not have any possible moves*/
     if(color == Color::BLACK)
     {
-        if(whiteMove.empty() && whiteBeats.empty()) emit end();//return true;
+        if(whiteMove.empty() && whiteBeats.empty()) emit end();
     }
+    /*white player finished his moves and black player does not have any possible moves*/
     else
     {
-        if(blackMove.empty() && blackBeats.empty()) emit end(); //return true;
+        if(blackMove.empty() && blackBeats.empty()) emit end();
     }
-    //return false;
 }
 
+/**
+ * @brief Evaluates the current state of the board
+ *        Is used in Minimax algorithm
+ * @param maximizer Color of the player who wants to maximize score
+ * @return int score that is the evaluation of the board`s state
+ */
 int Board::evaluateBoard(Color maximizer)
 {
     int score = 0;
@@ -664,43 +662,12 @@ int Board::evaluateBoard(Color maximizer)
         }
         score += -10*beats;
     }
-    //ui->debug->append("Evaluation score: " + QString::number(score) + '\n');
     return score;
 }
 
-
-
-field* Board::getBoardFields()
-{
-    field* f = new field[SIZE];
-    for(int i = 0; i < SIZE; ++i)
-    {
-        //qDebug(std::to_string(i).c_str());
-        f[i] = fields[i];
-    }
-    return f;
-}
-
-void Board::setBoardFields(field *f)
-{
-    if(fields != f)
-    {
-        qDebug("before delete fields in setBoard fields");
-        for(int i = 0; i < SIZE; ++i)
-        {
-            if(fields[i].getColor()==Color::BLACK)qDebug("Color black");
-            else qDebug("Color white");
-        }
-        //delete [] fields;
-        qDebug("after delete fields in setBoard fields");
-        fields = f;
-        for(int i = 0; i < SIZE; ++i)
-        {
-            connect(fields[i].getCheckerbutton(), SIGNAL(clicked(int)), this, SLOT(isClicked(int)));
-        }
-    }
-}
-
+/**
+ * @brief destructor
+ */
 Board::~Board()
 {
     delete [] fields;
